@@ -1,0 +1,149 @@
+- id: '1647286211980'
+  name: Alerte petite lampe
+  entities:
+    light.petite_lampe:
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      supported_color_modes:
+      - xy
+      color_mode: xy
+      brightness: 38
+      hs_color:
+      - 0
+      - 100
+      rgb_color:
+      - 255
+      - 0
+      - 0
+      xy_color:
+      - 0.701
+      - 0.299
+      color:
+        x: 0.701
+        y: 0.299
+      color_temp_startup: 454
+      linkquality: 72
+      power_on_behavior: 'off'
+      update:
+        state: idle
+      update_available:
+      friendly_name: Petite lampe
+      supported_features: 61
+      state: 'on'
+    select.petite_lampe_power_on_behavior:
+      options:
+      - 'off'
+      - previous
+      - 'on'
+      brightness: 38
+      color:
+        x: 0.701
+        y: 0.299
+      color_mode: xy
+      color_temp: 159
+      color_temp_startup: 454
+      linkquality: 72
+      power_on_behavior: 'off'
+      update:
+        state: idle
+      update_available:
+      icon: mdi:power-settings
+      friendly_name: Petite lampe power on behavior
+      state: 'off'
+- id: '1647288199161'
+  name: 'Petite lampe en mode cocooning '
+  entities:
+    light.petite_lampe:
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - finish_effect
+      - stop_effect
+      supported_color_modes:
+      - xy
+      color:
+        x: 0.47167
+        y: 0.38314
+      color_temp_startup: 454
+      linkquality: 174
+      power_on_behavior: 'off'
+      update:
+        state: available
+      update_available: true
+      friendly_name: Petite lampe
+      supported_features: 61
+      color_mode: xy
+      brightness: 76
+      hs_color:
+      - 28.837
+      - 50.588
+      rgb_color:
+      - 255
+      - 188
+      - 126
+      xy_color:
+      - 0.47167
+      - 0.38314
+      state: 'on'
+    select.petite_lampe_power_on_behavior:
+      options:
+      - 'off'
+      - previous
+      - 'on'
+      brightness: 76
+      color:
+        x: 0.47167
+        y: 0.38314
+      color_mode: xy
+      color_temp: 433
+      color_temp_startup: 454
+      linkquality: 174
+      power_on_behavior: 'off'
+      update:
+        state: available
+      update_available: true
+      icon: mdi:power-settings
+      friendly_name: Petite lampe power on behavior
+      state: 'off'
+  metadata: {}
+- id: '1647419163453'
+  name: Chauffage SDB actif
+  entities:
+    switch.chauffage_salle_de_bain:
+      friendly_name: Chauffage salle de bain
+      state: 'on'
+    input_boolean.chauffage_sdb:
+      editable: true
+      icon: mdi:light-switch
+      friendly_name: Chauffage SDB
+      state: 'on'
+- id: '1647419196775'
+  name: Chauffage SDB coupé
+  entities:
+    switch.chauffage_salle_de_bain:
+      friendly_name: Chauffage salle de bain
+      state: 'off'
+    input_boolean.chauffage_sdb:
+      editable: true
+      icon: mdi:light-switch
+      friendly_name: Chauffage SDB
+      state: 'off'
+- id: '1654685836502'
+  name: Pause HomePod Bureau
+  entities:
+    media_player.homepod_bureau:
+      app_id: com.apple.tvairplayd
+      friendly_name: HomePod Bureau
+      supported_features: 448439
+      state: standby
+    remote.homepod_bureau:
+      friendly_name: HomePod Bureau
+      supported_features: 0
+      state: 'on'

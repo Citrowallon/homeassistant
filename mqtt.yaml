@@ -1,0 +1,40 @@
+sensor: 
+
+### SmartGateways.nl Water Meter - sensors
+  - name: "connectix_watermeter_total"
+    state_topic: "watermeter/reading/current_value"
+    unique_id: watermeter_smart_gateways_current_value
+    state_class: total_increasing
+    device_class: water
+    force_update: true
+    unit_of_measurement: "L"
+    icon: mdi:water
+    
+  - name: "connectix_watermeter_total_m3"
+    state_topic: "watermeter/reading/current_value"
+    value_template: '{{ (value | float /1000) | round(3) }}'
+    unit_of_measurement: "m3"
+  - name: "Watermeter MAC Address"
+    state_topic: "watermeter/smart_gateways/mac_address"
+  - name: "Watermeter Firmware version of gateway"
+    state_topic: "watermeter/smart_gateways/running_firmware_version"
+  - name: "Watermeter available firmware version"
+    state_topic: "watermeter/smart_gateways/available_firmware_version"
+  - name: "Watermeter Firmware update available"
+    state_topic: "watermeter/smart_gateways/update_available"
+  - name: "Watermeter WiFi Signal strength (rssi)"
+    state_topic: "watermeter/smart_gateways/wifi_rssi"
+    unit_of_measurement: 'dB'
+  - name: "Watermeter startup time"
+    state_topic: "watermeter/smart_gateways/startup_time"
+    
+# magic cube
+  - name: "mon_cube_action"
+    state_topic: "zigbee2mqtt/Magic Cube/action"
+    
+### SmartGateways.nl Water Meter - firmware update switch
+switch:
+  - name: "Watermeter Install firmware update?"
+    command_topic: "watermeter/smart_gateways/install_update"
+    payload_on: "yes"
+    payload_off: "no"

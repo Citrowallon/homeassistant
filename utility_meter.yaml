@@ -1,0 +1,90 @@
+### SmartGateways.nl Water Meter - berekeningen
+water_quarter_hourly:
+  source: sensor.connectix_watermeter_total
+  cycle: quarter-hourly
+water_hourly:
+  source: sensor.connectix_watermeter_total
+  cycle: hourly
+water_daily:
+  source: sensor.connectix_watermeter_total
+  cycle: daily
+water_weekly:
+  source: sensor.connectix_watermeter_total
+  cycle: weekly
+water_monthly:
+  source: sensor.connectix_watermeter_total
+  cycle: monthly
+water_quaterly:
+  source: sensor.connectix_watermeter_total
+  cycle: quarterly
+water_monthly_m3:
+  source: sensor.connectix_watermeter_total_m3
+  cycle: monthly
+water_quarterly_m3:
+  source: sensor.connectix_watermeter_total_m3
+  cycle: quarterly
+water_yearly:
+  source: sensor.connectix_watermeter_total
+  cycle: yearly
+water_yearly_m3:
+  source: sensor.connectix_watermeter_total_m3
+  cycle: yearly
+
+### Gaz Meter
+gas_quarter_hourly:
+  source: sensor.gas_meter
+  cycle: quarter-hourly
+gas_hourly:
+  source: sensor.gas_meter
+  cycle: hourly
+gas_daily:
+  source: sensor.gas_meter
+  cycle: daily
+gas_weekly:
+  source: sensor.gas_meter
+  cycle: weekly
+gas_monthly:
+  source: sensor.gas_meter
+  cycle: monthly
+gas_quarterly:
+  source: sensor.gas_meter
+  cycle: quarterly
+gas_yearly:
+  source: sensor.gas_meter
+  cycle: yearly
+
+### Classe E 1-YVZ-883
+distance_1_yvz_883_daily:
+  source: sensor.1_yvz_883_odometer
+  name: Distance quotidienne de la Classe E
+  cycle: daily
+distance_1_yvz_883_weekly:
+  source: sensor.1_yvz_883_odometer
+  name: Distance hebdomadaire de la Classe E
+  cycle: weekly
+distance_1_yvz_883_monthly:
+  source: sensor.1_yvz_883_odometer
+  name: Distance mensuelle de la Classe E
+  cycle: monthly
+distance_1_yvz_883_yearly:
+  source: sensor.1_yvz_883_odometer
+  name: Distance annuelle de la Classe E
+  cycle: yearly
+
+### Classe A 2-BWS-847
+distance_2_bws_847_daily:
+  source: sensor.2_bws_847_odometer
+  name: Distance quotidienne de la Classe A
+  cycle: daily
+distance_2_bws_847_weekly:
+  source: sensor.2_bws_847_odometer
+  name: Distance hebdomadaire de la Classe A
+  cycle: weekly
+distance_2_bws_847_monthly:
+  source: sensor.2_bws_847_odometer
+  name: Distance mensuelle de la Classe A
+  cycle: monthly
+distance_2_bws_847_yearly:
+  source: sensor.2_bws_847_odometer
+  name: Distance annuelle de la Classe A
+  cycle: yearly

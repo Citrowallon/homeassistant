@@ -1,0 +1,4 @@
+sensor.thermometre_bureau: {}
+sensor.gas_meter:
+# state_class: measurement
+  state_class: total_increasing

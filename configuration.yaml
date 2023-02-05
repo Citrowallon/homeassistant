@@ -1,0 +1,112 @@
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+recorder:
+  db_url: !secret recorder_db_url
+  purge_keep_days: 1
+  exclude:
+    entity_globs:
+      - sensor.*_rx
+      - sensor.*_tx
+      - sensor.*_battery
+      - sensor.*_battery_level
+      - sensor.*_update
+      - binary_sensor.*_update_available
+      - binary_sensor.*_firmware*
+      - sensor.*_linkquality
+      - sensor.*_rssi
+      - sensor.*_voltage
+      - sensor.*signal*
+      - sensor.*_phase*
+      - switch.*_power_outage_memory
+      - sensor.*_device_temperature
+      - sensor.shelly_plug_*_temperature
+      - sensor.shelly_2_5_*_temperature
+      - sensor.*_zb_update_state
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+group: !include groups.yaml
+automation: !include automations.yaml
+binary_sensor: !include binary_sensor.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+sensor: !include sensor.yaml
+switch: !include switch.yaml
+mqtt: !include mqtt.yaml
+template: !include template.yaml
+proximity: !include proximity.yaml
+utility_meter: !include utility_meter.yaml
+rest: !include rest.yaml
+homeassistant:
+  customize: !include customize.yaml
+
+
+
+# test de la ligne internet
+speedtestdotnet:
+
+#calendar
+calendar:
+  - platform: caldav
+    url: https://caldav.icloud.com
+    username: !secret icloud_user
+    password: !secret icloud_password
+
+influxdb:
+  host: 10.2.30.151
+  port: 8086
+  database: homeassistant
+  username: !secret influxdb_user
+  password: !secret influxdb_password
+  max_retries: 3
+  default_measurement: state
+  
+
+python_script:
+
+panel_iframe:
+  fileeditor:
+    title: "File Editor"
+    url: "http://10.2.30.151:3218"
+    require_admin: true
+    icon: mdi:wrench
+
+    
+monitor_docker:
+  - name: Docker
+    containers:
+      - appdaemon
+      - duplicati
+      - grafana
+      - homeassistant
+      - influxdb
+      - mosquitto
+      - portainer
+      - zigbee2mqtt
+      - heimdall
+      - bookstack
+      - telegraf
+      - chronograf
+      - file-editor
+    rename:
+      appdaemon: AppDaemon
+      duplicati: Duplicati Backup
+      homeassistant: Home Assistant
+      influxdb: InfluxDB
+      mosquitto: Mosquitto
+      portainer: Portainer
+      zigbee2mqtt: Zigbee2MQTT
+      bookstact: BookStack
+      file-editor: File Editor
+    monitored_conditions:
+      - version
+      - images
+      - containers_running
+      - containers_total
+      - uptime
+      - state
+      - status
+      - memory

@@ -1,0 +1,19 @@
+soussol:
+  name: lampe_sous_sol
+  entities:
+    - switch.lampe_buanderie
+    - switch.lampe_cellier
+    - switch.fond_du_garage
+    - switch.escalier_cave
+    - switch.entree_garage
+    - switch.lampe
+garage:
+  name: lampe_garage
+  entities:
+    - switch.fond_du_garage
+    - switch.entree_garage
+fenetre_bureau:
+  name: Fenêtres Bureau
+  entities:
+    - binary_sensor.fenetre_droite_bureau_contact
+    - binary_sensor.fenetre_gauche_bureau_contact

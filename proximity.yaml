@@ -1,0 +1,27 @@
+distance_ben_home:
+  zone: home
+  devices:
+    - person.benjamin_puissant
+  tolerance: 50
+  unit_of_measurement: m
+  
+distance_ben_home_km:
+  zone: home
+  devices:
+    - person.benjamin_puissant
+  tolerance: 50
+  unit_of_measurement: km
+
+distance_christelle_home:
+  zone: home
+  devices:
+    - person.christelle
+  tolerance: 50
+  unit_of_measurement: m
+  
+distance_christelle_home_km:
+  zone: home
+  devices:
+    - person.christelle
+  tolerance: 50
+  unit_of_measurement: km

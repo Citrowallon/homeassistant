@@ -1,0 +1,452 @@
+test_pushover:
+  alias: test_pushover
+  sequence:
+  - service: notify.pushover
+    data:
+      title: TEST ALERT!
+      message: Ceci est un message test!
+allumer_chauffage_salle_de_bain:
+  alias: Allumer chauffage salle de bain
+  sequence:
+  - if:
+    - condition: state
+      entity_id: binary_sensor.shelly_door_window_2_e8db84d235ea_opening
+      state: 'off'
+      enabled: false
+    - condition: state
+      entity_id: binary_sensor.shellydw2_e8db84d235ea_door
+      state: 'off'
+    then:
+    - if:
+      - condition: numeric_state
+        entity_id: sensor.sbm_salle_de_bain_temperature
+        below: '21'
+      then:
+      - type: turn_on
+        device_id: 193d782818a7369d5066dfa9477213dc
+        entity_id: switch.chauffage_salle_de_bain
+        domain: switch
+      - service: input_boolean.turn_on
+        data: {}
+        target:
+          entity_id: input_boolean.chauffage_sdb
+      else:
+      - service: input_boolean.turn_on
+        data: {}
+        target:
+          entity_id: input_boolean.chauffage_sdb
+    else:
+    - if:
+      - condition: numeric_state
+        entity_id: sensor.sbm_salle_de_bain_temperature
+        below: '21'
+      then:
+      - service: notify.mobile_app_iphoneben
+        data:
+          message: La porte de la salle de bain est ouverte et la temperature y est
+            de {{ states('sensor.sbm_salle_de_bain_temperature') }} °C
+        enabled: false
+      - service: input_boolean.turn_on
+        data: {}
+        target:
+          entity_id: input_boolean.chauffage_sdb
+      else:
+      - event: NOTIFIER
+        event_data:
+          action: send_to_ben
+          title: Salle de Bain
+          message: La porte est restée ouverte et la temperature y est de {{ states('sensor.sbm_salle_de_bain_temperature')
+            }} °C
+  mode: single
+  icon: mdi:heat-pump
+ecouter_classic_21:
+  alias: Ecouter Classic 21 - Bureau
+  sequence:
+  - service: media_player.play_media
+    target:
+      entity_id: media_player.homepod_bureau
+    data:
+      media_content_id: media-source://radio_browser/0af512c6-eae5-4875-a206-302dc6a12a64
+      media_content_type: audio/mpeg
+    metadata:
+      title: Classic21
+      thumbnail: https://www.static.rtbf.be/rtbf/home/images/ico/favicon-info-32x32.png
+      media_class: music
+      children_media_class:
+      navigateIds:
+      - {}
+      - media_content_type: app
+        media_content_id: media-source://radio_browser
+      - media_content_type: music
+        media_content_id: media-source://radio_browser/country/BE
+  mode: single
+ecouter_rtl2:
+  alias: Ecouter RTL2 - Bureau
+  sequence:
+  - service: media_player.play_media
+    target:
+      entity_id: media_player.homepod_bureau
+    data:
+      media_content_id: media-source://radio_browser/a5a6b881-2900-11e8-91bf-52543be04c81
+      media_content_type: audio/mpeg
+    metadata:
+      title: RTL2
+      thumbnail: ''
+      media_class: music
+      children_media_class:
+      navigateIds:
+      - {}
+      - media_content_type: app
+        media_content_id: media-source://radio_browser
+      - media_content_type: music
+        media_content_id: media-source://radio_browser/country/FR
+  mode: single
+ecouter_classic_21_salon:
+  alias: Ecouter Classic 21 - Salon
+  sequence:
+  - service: media_player.play_media
+    target:
+      entity_id: media_player.homepod_salon
+    data:
+      media_content_id: media-source://radio_browser/0af512c6-eae5-4875-a206-302dc6a12a64
+      media_content_type: audio/mpeg
+    metadata:
+      title: Classic21
+      thumbnail: https://www.static.rtbf.be/rtbf/home/images/ico/favicon-info-32x32.png
+      media_class: music
+      children_media_class:
+      navigateIds:
+      - {}
+      - media_content_type: app
+        media_content_id: media-source://radio_browser
+      - media_content_type: music
+        media_content_id: media-source://radio_browser/country/BE
+  mode: single
+store_pauline:
+  alias: Store Pauline
+  sequence:
+  - if:
+    - condition: device
+      device_id: 4727e8c65fa9ab28f84332131fd829c0
+      domain: cover
+      entity_id: cover.store_chambre_pauline
+      type: is_position
+      below: 100
+    then:
+    - device_id: 4727e8c65fa9ab28f84332131fd829c0
+      domain: cover
+      entity_id: cover.store_chambre_pauline
+      type: set_position
+      position: 100
+    else:
+    - device_id: 4727e8c65fa9ab28f84332131fd829c0
+      domain: cover
+      entity_id: cover.store_chambre_pauline
+      type: set_position
+      position: 14
+  mode: single
+  icon: mdi:window-shutter-cog
+ouvrir_store_lame_salle_a_manger:
+  alias: Ouvrir store lame salle à manger
+  sequence:
+  - device_id: 2407abe1898292d36c0503325c806d58
+    domain: cover
+    entity_id: cover.store_salle_a_manger
+    type: set_position
+    position: 50
+  mode: single
+fermer_les_stores_des_chambres:
+  alias: Fermer les stores des chambres
+  sequence:
+  - device_id: 692b4c97989429ae6e429b0b7b52d597
+    domain: cover
+    entity_id: cover.store_chambre_alice
+    type: set_position
+    position: 0
+  - device_id: 44be24827d8b9acb4f362cfe3c741c6e
+    domain: cover
+    entity_id: cover.store_pallier
+    type: set_position
+    position: 0
+  - if:
+    - type: is_not_open
+      condition: device
+      device_id: b85c42a2b6712eee22b85925f0150825
+      entity_id: binary_sensor.fenetre_chambre_pauline_door
+      domain: binary_sensor
+    then:
+    - device_id: 4727e8c65fa9ab28f84332131fd829c0
+      domain: cover
+      entity_id: cover.store_chambre_pauline
+      type: set_position
+      position: 13
+  - if:
+    - type: is_not_open
+      condition: device
+      device_id: bcc47a2e88549547a3a84804ad78c649
+      entity_id: binary_sensor.shellydw2_e8db84d27a89_door
+      domain: binary_sensor
+    then:
+    - device_id: 692b4c97989429ae6e429b0b7b52d597
+      domain: cover
+      entity_id: cover.store_chambre_alice
+      type: set_position
+      position: 0
+  mode: single
+  icon: mdi:window-shutter
+ouvrir_les_stores_des_chambres:
+  alias: Ouvrir les stores des chambres
+  sequence:
+  - device_id: 4727e8c65fa9ab28f84332131fd829c0
+    domain: cover
+    entity_id: cover.store_chambre_pauline
+    type: set_position
+    position: 100
+  - device_id: 692b4c97989429ae6e429b0b7b52d597
+    domain: cover
+    entity_id: cover.store_chambre_alice
+    type: set_position
+    position: 100
+  - device_id: 44be24827d8b9acb4f362cfe3c741c6e
+    domain: cover
+    entity_id: cover.store_pallier
+    type: set_position
+    position: 100
+  mode: single
+  icon: mdi:window-shutter-open
+ouvrir_les_screens:
+  alias: Ouvrir les screens
+  sequence:
+  - device_id: 14374033c77ddd7edda62486447ccf63
+    domain: cover
+    entity_id: cover.maestria_io_3
+    type: set_position
+    position: 100
+  - device_id: 38b36bcfe500e5f5dcd65c58f10ee088
+    domain: cover
+    entity_id: cover.maestria_io
+    type: set_position
+    position: 100
+  - device_id: 36082533b44b086064277e248b9f7d1e
+    domain: cover
+    entity_id: cover.maestria_io_2
+    type: set_position
+    position: 100
+  mode: single
+  icon: mdi:window-shutter-open
+fermer_les_screens_de_la_cuisine:
+  alias: 'Fermer les screens de la cuisine '
+  sequence:
+  - if:
+    - condition: device
+      device_id: 36082533b44b086064277e248b9f7d1e
+      domain: cover
+      entity_id: cover.maestria_io_2
+      type: is_open
+    then:
+    - device_id: 36082533b44b086064277e248b9f7d1e
+      domain: cover
+      entity_id: cover.maestria_io_2
+      type: set_position
+      position: 0
+  - if:
+    - condition: device
+      device_id: 14374033c77ddd7edda62486447ccf63
+      domain: cover
+      entity_id: cover.maestria_io_3
+      type: is_open
+    then:
+    - device_id: 14374033c77ddd7edda62486447ccf63
+      domain: cover
+      entity_id: cover.maestria_io_3
+      type: set_position
+      position: 0
+  mode: single
+remonter_les_screens_de_la_cuisine:
+  alias: Remonter les screens de la cuisine
+  sequence:
+  - if:
+    - condition: device
+      device_id: 14374033c77ddd7edda62486447ccf63
+      domain: cover
+      entity_id: cover.maestria_io_3
+      type: is_closed
+    then:
+    - device_id: 14374033c77ddd7edda62486447ccf63
+      domain: cover
+      entity_id: cover.maestria_io_3
+      type: set_position
+      position: 100
+  - if:
+    - condition: device
+      device_id: 36082533b44b086064277e248b9f7d1e
+      domain: cover
+      entity_id: cover.maestria_io_2
+      type: is_closed
+    then:
+    - device_id: 36082533b44b086064277e248b9f7d1e
+      domain: cover
+      entity_id: cover.maestria_io_2
+      type: set_position
+      position: 100
+  mode: single
+store_alice:
+  alias: Store Alice
+  sequence:
+  - if:
+    - condition: device
+      device_id: 692b4c97989429ae6e429b0b7b52d597
+      domain: cover
+      entity_id: cover.store_chambre_alice
+      type: is_position
+      below: 100
+    then:
+    - device_id: 692b4c97989429ae6e429b0b7b52d597
+      domain: cover
+      entity_id: cover.store_chambre_alice
+      type: set_position
+      position: 100
+    else:
+    - device_id: 692b4c97989429ae6e429b0b7b52d597
+      domain: cover
+      entity_id: cover.store_chambre_alice
+      type: set_position
+      position: 0
+  mode: single
+  icon: mdi:window-shutter-cog
+ouvrir_store_bureau:
+  alias: Ouvrir store Bureau
+  sequence:
+  - device_id: ea543bbabf3cb7cef94fe405704cd21e
+    domain: cover
+    entity_id: cover.store_bureau
+    type: set_position
+    position: 35
+  mode: single
+  icon: mdi:window-shutter-open
+mettre_rtl_tvi:
+  alias: Mettre RTL-TVI
+  sequence:
+  - service: harmony.change_channel
+    data:
+      channel: 4
+    target:
+      entity_id: remote.quers_hub
+  mode: single
+mettre_france2:
+  alias: Mettre France2
+  sequence:
+  - service: harmony.change_channel
+    data:
+      channel: 2
+    target:
+      entity_id: remote.quers_hub
+  mode: single
+mettre_tf1:
+  alias: Mettre TF1
+  sequence:
+  - service: harmony.change_channel
+    data:
+      channel: 1
+    target:
+      entity_id: remote.quers_hub
+  mode: single
+extinction_tv:
+  alias: Extinction TV
+  sequence:
+  - type: turn_off
+    device_id: 47188f8802fc78444b3feff322d24b4f
+    entity_id: light.lampe_tv
+    domain: light
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 5
+      milliseconds: 0
+  - if:
+    - condition: state
+      entity_id: input_boolean.enregistrement_en_cours
+      state: 'off'
+    then:
+    - type: turn_off
+      device_id: fdf9567d94fa4962e3636257701f4a4a
+      entity_id: switch.prise_multimedia
+      domain: switch
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 25
+      milliseconds: 0
+  - type: turn_off
+    device_id: c5024076faa616cae11dc90ba1d0a920
+    entity_id: light.petite_lampe
+    domain: light
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id:
+      - input_boolean.cocooning
+      - input_boolean.tv
+  mode: single
+couper_le_chauffage_de_la_salle_de_bain_si_porte_restee_ouverte:
+  alias: Couper le chauffage de la salle de bain si porte restée ouverte
+  sequence:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 15
+      milliseconds: 0
+  - if:
+    - condition: state
+      entity_id: binary_sensor.shelly_door_window_2_e8db84d21eb5_opening
+      state: 'on'
+    then:
+    - type: turn_off
+      device_id: 193d782818a7369d5066dfa9477213dc
+      entity_id: switch.shelly_plug_s_0d2862_relay_0
+      domain: switch
+  mode: single
+a_table_alice:
+  alias: A table, Alice
+  sequence:
+  - if:
+    - condition: device
+      type: is_on
+      device_id: e4c6ee201053f7ea9735ab754655ea94
+      entity_id: light.led_bureau_alice
+      domain: light
+    then:
+    - repeat:
+        count: '3'
+        sequence:
+        - device_id: e4c6ee201053f7ea9735ab754655ea94
+          domain: light
+          entity_id: light.led_bureau_alice
+          type: brightness_decrease
+        - delay:
+            hours: 0
+            minutes: 0
+            seconds: 1
+            milliseconds: 0
+        - device_id: e4c6ee201053f7ea9735ab754655ea94
+          domain: light
+          entity_id: light.led_bureau_alice
+          type: brightness_increase
+  mode: single
+ouvrir_les_stores_lame:
+  alias: Ouvrir les stores lame
+  sequence:
+  - service: script.ouvrir_store_bureau
+    data: {}
+  - service: script.ouvrir_store_lame_salle_a_manger
+    data: {}
+  mode: single
+mettre_tmc:
+  alias: Mettre TMC
+  sequence:
+  - service: harmony.change_channel
+    data:
+      channel: 19
+    target:
+      entity_id: remote.quers_hub
+  mode: single

@@ -1,0 +1,2143 @@
+- id: '1638629224537'
+  alias: Notifier temperature extérieur
+  description: ''
+  trigger:
+  - platform: time
+    at: 07:00
+  condition:
+  - condition: time
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  action:
+  - service: notify.pushover
+    data:
+      message: 'Aujourd''hui, nous fêtons les {{states(''sensor.fete_du_jour'')}}
+        et la temperature extérieur est de {{ states(''sensor.sonde_exterieure_temperature'')
+        }} °C '
+      target:
+      - iPhonedeB
+  mode: single
+- id: '1639410719289'
+  alias: Eteindre lampe extérieur porte d'entrée
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: e425305ec121cef212a0ed2adea47ec5
+    entity_id: binary_sensor.capteur_porte_entree_contact
+    domain: binary_sensor
+  condition:
+  - condition: device
+    type: is_on
+    device_id: 7fa1ce038252fafe544b8ed585aada1e
+    entity_id: light.lampe_exterieure_entree
+    domain: light
+  action:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 15
+      milliseconds: 0
+  - type: turn_off
+    device_id: 7fa1ce038252fafe544b8ed585aada1e
+    entity_id: light.lampe_exterieure_entree
+    domain: light
+  mode: single
+- id: '1639820963313'
+  alias: 'Notifier temperature extérieur (le week-end) '
+  description: ''
+  trigger:
+  - platform: time
+    at: 09:00
+  condition:
+  - condition: time
+    weekday:
+    - sat
+    - sun
+  action:
+  - service: notify.pushover
+    data:
+      message: Aujourd'hui, nous fêtons les {{states('sensor.fete_du_jour')}} et la
+        temperature extérieur est de {{ states('sensor.sonde_exterieure_temperature')
+        }} °C
+      target:
+      - iPhonedeB
+  mode: single
+- id: '1640004080371'
+  alias: Aqara Magic Cube (Z2M)
+  description: ''
+  use_blueprint:
+    path: luckypoppy/z2m-xiaomi-cube-controller.yaml
+    input:
+      rotate_cw_face_0:
+      - device_id: d5901a5ad0bc36184a07bfdcceb1010b
+        domain: light
+        entity_id: light.lampe_bureau
+        type: brightness_increase
+      rotate_ccw_face_0:
+      - device_id: d5901a5ad0bc36184a07bfdcceb1010b
+        domain: light
+        entity_id: light.lampe_bureau
+        type: brightness_decrease
+      slide_face_0:
+      - type: toggle
+        device_id: d5901a5ad0bc36184a07bfdcceb1010b
+        entity_id: light.lampe_bureau
+        domain: light
+      remote: 5cf07189bc78dde78742e7ee2f0360fe
+- id: '1640283854914'
+  alias: Bouton entrée - Appui simple
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 7b4997a9faceabaa93db8b20c7980449
+    type: action
+    subtype: 'on'
+    discovery_id: 0x680ae2fffe2f2e6a action_on
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 66dab313202e6deecfd3ee76bd0ed8c4
+    entity_id: light.light_ground_0
+    domain: light
+  - type: turn_off
+    device_id: f29da1a34e0ebd211d6183d4e8912891
+    entity_id: switch.coin_canape
+    domain: switch
+  - type: turn_off
+    device_id: f29da1a34e0ebd211d6183d4e8912891
+    entity_id: switch.pupitre
+    domain: switch
+  - type: turn_off
+    device_id: b06fef6158f01f88fef804c51c955be9
+    entity_id: switch.jardin
+    domain: switch
+  - type: turn_off
+    device_id: b06fef6158f01f88fef804c51c955be9
+    entity_id: switch.terrasse
+    domain: switch
+  - type: turn_off
+    device_id: 52b12da06cb981a3f4266a0ec521f81b
+    entity_id: switch.lampe_exterieure
+    domain: switch
+  mode: single
+- id: '1640284045391'
+  alias: Bouton entrée - Appui double
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 7b4997a9faceabaa93db8b20c7980449
+    type: action
+    subtype: 'off'
+    discovery_id: 0x680ae2fffe2f2e6a action_off
+  condition: []
+  action:
+  - type: toggle
+    device_id: b06fef6158f01f88fef804c51c955be9
+    entity_id: switch.jardin
+    domain: switch
+  mode: single
+- id: '1640290346306'
+  alias: Bouton entrée - Appui long
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 7b4997a9faceabaa93db8b20c7980449
+    type: action
+    subtype: brightness_move_up
+    discovery_id: 0x680ae2fffe2f2e6a action_brightness_move_up
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 66dab313202e6deecfd3ee76bd0ed8c4
+    entity_id: light.light_ground_0
+    domain: light
+  - type: turn_off
+    device_id: 2dd4ed906628d4759a3b7ea701d70f4e
+    entity_id: light.light_ground_1
+    domain: light
+  - type: turn_off
+    device_id: f29da1a34e0ebd211d6183d4e8912891
+    entity_id: switch.coin_canape
+    domain: switch
+  - type: turn_off
+    device_id: f29da1a34e0ebd211d6183d4e8912891
+    entity_id: switch.pupitre
+    domain: switch
+  - type: turn_off
+    device_id: b06fef6158f01f88fef804c51c955be9
+    entity_id: switch.jardin
+    domain: switch
+  - type: turn_off
+    device_id: b06fef6158f01f88fef804c51c955be9
+    entity_id: switch.terrasse
+    domain: switch
+  - type: turn_off
+    device_id: 52b12da06cb981a3f4266a0ec521f81b
+    entity_id: switch.lampe_exterieure
+    domain: switch
+  mode: single
+- id: '1640675185382'
+  alias: 'Bouton table basse - Appui double '
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 88f632a1f7324ed18e03d70eca92d05e
+    type: action
+    subtype: 'off'
+    discovery_id: 0x0c4314fffea06d25 action_off
+  condition: []
+  action:
+  - type: toggle
+    device_id: a8e27887f3489657e51edf63ddd537c5
+    entity_id: light.lampe_coin_lecture
+    domain: light
+  mode: single
+- id: '1640675222530'
+  alias: Bouton table basse - Appui simple
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 88f632a1f7324ed18e03d70eca92d05e
+    type: action
+    subtype: 'on'
+    discovery_id: 0x0c4314fffea06d25 action_on
+  condition: []
+  action:
+  - type: toggle
+    device_id: 74f831cbb7c79d9f97660f8c5da23835
+    entity_id: light.coin_salon
+    domain: light
+  mode: single
+- id: '1640675307481'
+  alias: Bouton table basse - Appui long
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 88f632a1f7324ed18e03d70eca92d05e
+    type: action
+    subtype: brightness_move_up
+    discovery_id: 0x0c4314fffea06d25 action_brightness_move_up
+  condition: []
+  action:
+  - type: toggle
+    device_id: 74f831cbb7c79d9f97660f8c5da23835
+    entity_id: light.pupitre
+    domain: light
+  mode: single
+- id: '1642341806312'
+  alias: Bouton Salle à Manger - Appui simple
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: fb237c2f94efc43f18cdeb52f2b26497
+    type: action
+    subtype: 'on'
+    discovery_id: 0xec1bbdfffe3f9c9e action_on
+  condition: []
+  action:
+  - type: toggle
+    device_id: 10316b7da9cbf969c9e74011d2ec418d
+    entity_id: light.table_salle_a_manger
+    domain: light
+  - device_id: 2407abe1898292d36c0503325c806d58
+    domain: cover
+    entity_id: cover.store_salle_a_manger
+    type: set_position
+    position: 0
+  mode: single
+- id: '1642341906891'
+  alias: Bouton Salle à manger - Appui double
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: fb237c2f94efc43f18cdeb52f2b26497
+    type: action
+    subtype: 'off'
+    discovery_id: 0xec1bbdfffe3f9c9e action_off
+  condition: []
+  action:
+  - type: toggle
+    device_id: c7ef68f2da30d01518276f760edee0ea
+    entity_id: light.lampe_table_droite
+    domain: light
+  - device_id: 2407abe1898292d36c0503325c806d58
+    domain: cover
+    entity_id: cover.store_salle_a_manger
+    type: set_position
+    position: 0
+  mode: single
+- id: '1642343551121'
+  alias: Allumer pièce de vie
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 22c921f554f3cc3733c0bc7ac7090e6c
+    type: action
+    subtype: 'on'
+    discovery_id: 0x5c0272fffeab074a action_on
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 2224bbaaf96be4f3c2fc937bf6f7ea76
+    entity_id: switch.piece_de_vie
+    domain: switch
+  mode: single
+- id: '1642343719628'
+  alias: 'Eteindre pièce de vie '
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 22c921f554f3cc3733c0bc7ac7090e6c
+    type: action
+    subtype: 'off'
+    discovery_id: 0x5c0272fffeab074a action_off
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 2224bbaaf96be4f3c2fc937bf6f7ea76
+    entity_id: light.piece_de_vie
+    domain: light
+  - type: turn_off
+    device_id: f29da1a34e0ebd211d6183d4e8912891
+    entity_id: switch.coin_canape
+    domain: switch
+  - type: turn_off
+    device_id: f29da1a34e0ebd211d6183d4e8912891
+    entity_id: switch.pupitre
+    domain: switch
+  mode: single
+- id: '1643560078523'
+  alias: Mouvement sur le pallier
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 117f88c35a1556c7f9fe20568a0b3398
+    entity_id: binary_sensor.capteur_pallier_occupancy
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: notify.mobile_app_iphone_de_b
+    data:
+      message: Mouvemen détecté sur le pallier
+  mode: single
+- id: '1643649950270'
+  alias: Allumer hall d'entrée
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 644b7f1248bce827f36717d3d875ea87
+    entity_id: binary_sensor.capteur_hall_d_entree_occupancy
+    domain: binary_sensor
+  condition:
+  - condition: or
+    conditions:
+    - type: is_illuminance
+      condition: device
+      device_id: 644b7f1248bce827f36717d3d875ea87
+      entity_id: sensor.capteur_hall_d_entree_illuminance_lux
+      domain: sensor
+      below: 15
+    - condition: sun
+      before: sunrise
+    - condition: sun
+      after: sunset
+  action:
+  - type: turn_on
+    device_id: a38975e745cca99de2b7477672572389
+    entity_id: light.lampe_vestiaire
+    domain: light
+    brightness_pct: 50
+  - type: turn_on
+    device_id: 7144d0ed2c2545342d770536da1ba61d
+    entity_id: switch.interrupteur_hall_d_entree
+    domain: switch
+  mode: single
+- id: '1643649986252'
+  alias: Eteindre hall d'entrée
+  description: ''
+  trigger:
+  - type: no_motion
+    platform: device
+    device_id: 644b7f1248bce827f36717d3d875ea87
+    entity_id: binary_sensor.capteur_hall_d_entree_occupancy
+    domain: binary_sensor
+  condition: []
+  action:
+  - type: turn_off
+    device_id: a38975e745cca99de2b7477672572389
+    entity_id: light.lampe_vestiaire
+    domain: light
+  - type: turn_off
+    device_id: 7144d0ed2c2545342d770536da1ba61d
+    entity_id: switch.interrupteur_hall_d_entree
+    domain: switch
+  mode: single
+- id: '1643711906452'
+  alias: Aide soleil
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 117f88c35a1556c7f9fe20568a0b3398
+    entity_id: binary_sensor.capteur_pallier_occupancy
+    domain: binary_sensor
+  condition:
+  - condition: or
+    conditions:
+    - condition: sun
+      before: sunrise
+    - condition: sun
+      after: sunset
+  action:
+  - service: notify.mobile_app_iphone_de_b
+    data:
+      message: Mouvement détecté sur le pallier
+  mode: single
+- id: '1643834639222'
+  alias: Start charge batterie
+  description: ''
+  trigger:
+  - platform: time
+    at: '22:30'
+  condition: []
+  action:
+  - type: turn_on
+    device_id: d430236a51d59dc41f1271b9a09e9b11
+    entity_id: switch.prise_voiture
+    domain: switch
+  mode: single
+- id: '1643834721279'
+  alias: End charge batterie
+  description: ''
+  trigger:
+  - platform: time
+    at: 05:30
+  condition: []
+  action:
+  - type: turn_off
+    device_id: d430236a51d59dc41f1271b9a09e9b11
+    entity_id: switch.prise_voiture
+    domain: switch
+  mode: single
+- id: '1643955893752'
+  alias: Notifier ouverture porte d'entrée
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: e425305ec121cef212a0ed2adea47ec5
+    entity_id: binary_sensor.capteur_porte_entree_contact
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: notify.pushover
+    data:
+      title: Porte d'entrée
+      message: La porte est ouverte
+      target: iphonedeC
+    enabled: false
+  - event: NOTIFIER
+    event_data:
+      action: send_to_all
+      title: Entrée
+      message: La porte est ouverte
+  mode: single
+- id: '1643955939342'
+  alias: Notifier fermeture porte d'entrée
+  description: ''
+  trigger:
+  - type: not_opened
+    platform: device
+    device_id: e425305ec121cef212a0ed2adea47ec5
+    entity_id: binary_sensor.capteur_porte_entree_contact
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: notify.mobile_app_iphone
+    data:
+      message: La porte d'entrée est fermée
+      title: Porte d'entrée
+    enabled: false
+  - service: notify.pushover
+    data:
+      target: iphonedeC
+      title: Porte d'entrée
+      message: La porte est fermée
+    enabled: false
+  - event: NOTIFIER
+    event_data:
+      action: send_to_all
+      title: Entrée
+      message: La porte est fermée
+  mode: single
+- id: '1644494278737'
+  alias: Bouton salle à manger - Appui long
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: fb237c2f94efc43f18cdeb52f2b26497
+    type: action
+    subtype: brightness_move_up
+    discovery_id: 0xec1bbdfffe3f9c9e action_brightness_move_up
+  condition: []
+  action:
+  - type: toggle
+    device_id: 401b1d3cfb00fc8ef35865bf42f91668
+    entity_id: light.lampe_table_gauche
+    domain: light
+  - device_id: 2407abe1898292d36c0503325c806d58
+    domain: cover
+    entity_id: cover.store_salle_a_manger
+    type: set_position
+    position: 0
+  mode: single
+- id: '1644613480962'
+  alias: Fermer ma benz
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: e425305ec121cef212a0ed2adea47ec5
+    entity_id: binary_sensor.capteur_porte_entree_contact
+    domain: binary_sensor
+  - platform: device
+    device_id: 42eafdb88cab68ac100ee20c524cd6a7
+    domain: cover
+    entity_id: cover.commande_porte_garage_garage
+    type: closed
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: lock.1_yvz_883_lock
+      state: unlocked
+    - condition: zone
+      entity_id: device_tracker.1_yvz_883_device_tracker
+      zone: zone.home
+    - condition: state
+      entity_id: sensor.1_yvz_883_ignition_state
+      state: '0'
+  action:
+  - device_id: 0fd2fda829d696f5d5c91d780a61ba9f
+    domain: lock
+    entity_id: lock.1_yvz_883_lock
+    type: lock
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
+  - event: NOTIFIER
+    event_data:
+      action: send_to_ben
+      title: Panzer
+      message: Les portières sont {{ states('lock.1_yvz_883_lock') }}
+  mode: single
+- id: '1644857291356'
+  alias: Le Panzer quitte la piscine
+  description: ''
+  use_blueprint:
+    path: homeassistant/notify_leaving_zone.yaml
+    input:
+      person_entity: person.panzer
+      zone_entity: zone.point_d_eau_2
+      notify_device: 2d815d9a5423ebe3d52ea5a613282b77
+- id: '1646047915865'
+  alias: Eteindre petit coin (via capteur mouvement)
+  description: ''
+  trigger:
+  - type: no_motion
+    platform: device
+    device_id: cf0de142844e3c809925ff2b8eac3755
+    entity_id: binary_sensor.capteur_petit_coin_occupancy
+    domain: binary_sensor
+  condition: []
+  action:
+  - type: turn_off
+    device_id: ad95c30f78eec74fd91f4c1ae6895ba8
+    entity_id: light.interrupteur_petit_coin
+    domain: light
+  mode: single
+- id: '1646076491356'
+  alias: Allumer lumière petit coin
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: cf0de142844e3c809925ff2b8eac3755
+    entity_id: binary_sensor.capteur_petit_coin_occupancy
+    domain: binary_sensor
+  condition:
+  - condition: or
+    conditions:
+    - condition: sun
+      before: sunrise
+    - condition: sun
+      after: sunset
+    - condition: numeric_state
+      entity_id: sensor.capteur_aqara_p1_illuminance_lux
+      below: 40
+  action:
+  - type: turn_on
+    device_id: ad95c30f78eec74fd91f4c1ae6895ba8
+    entity_id: light.interrupteur_petit_coin
+    domain: light
+  - service: persistent_notification.create
+    data:
+      title: Capteur Petit coin
+      message: La luminosité y est de {{     states('sensor.capteur_petit_coin_illuminance_lux')
+        }} lx et de {{ states('sensor.capteur_aqara_p1_illuminance_lux') }} lux sur
+        capteur P1
+  mode: single
+- id: shellies_announce
+  alias: Shellies Announce
+  trigger:
+  - platform: homeassistant
+    event: start
+  - platform: time_pattern
+    hours: /1
+  action:
+    service: mqtt.publish
+    data:
+      topic: shellies/command
+      payload: announce
+- id: shellies_discovery
+  alias: Shellies Discovery
+  mode: queued
+  max: 999
+  trigger:
+    platform: mqtt
+    topic: shellies/announce
+  action:
+    service: python_script.shellies_discovery
+    data:
+      id: '{{ trigger.payload_json.id }}'
+      mac: '{{ trigger.payload_json.mac }}'
+      fw_ver: '{{ trigger.payload_json.fw_ver }}'
+      model: '{{ trigger.payload_json.model }}'
+      mode: '{{ trigger.payload_json.mode | default }}'
+      host: '{{ trigger.payload_json.ip }}'
+- id: '1647288586883'
+  alias: 'Cave allumée '
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: group.soussol
+    from: 'off'
+    to: 'on'
+  condition: []
+  action:
+  - scene: scene.alerte_petite_lampe
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.lumiere_cave
+  mode: single
+- id: '1647289404629'
+  alias: Cave étteinte
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: group.soussol
+    from: 'on'
+    to: 'off'
+  condition:
+  - condition: state
+    entity_id: input_boolean.cocooning
+    state: 'off'
+  action:
+  - type: turn_off
+    device_id: c5024076faa616cae11dc90ba1d0a920
+    entity_id: light.petite_lampe
+    domain: light
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.lumiere_cave
+  mode: single
+- id: '1647291417917'
+  alias: 'Cave étteinte - cocooning '
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: group.soussol
+    from: 'on'
+    to: 'off'
+  condition:
+  - condition: state
+    entity_id: input_boolean.cocooning
+    state: 'on'
+  action:
+  - scene: scene.cocooning_petite_lampe
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.lumiere_cave
+  mode: single
+- id: '1647322929940'
+  alias: 'Etteindre veilleuse '
+  description: ''
+  trigger:
+  - type: no_motion
+    platform: device
+    device_id: cb383ca24e8c1f447b9c070fc52bfc3c
+    entity_id: binary_sensor.capteur_escalier_occupancy
+    domain: binary_sensor
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: input_boolean.cocooning
+      state: 'off'
+  action:
+  - type: turn_off
+    device_id: c5024076faa616cae11dc90ba1d0a920
+    entity_id: light.petite_lampe
+    domain: light
+  mode: single
+- id: '1647419604720'
+  alias: Bouton Salle de bain - Appui simple
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: d4707bfedb35c71a105ad9405e3056d6
+    type: action
+    subtype: 'on'
+    discovery_id: 0xec1bbdfffe8c7c79 action_on
+  condition: []
+  action:
+  - type: toggle
+    device_id: 193d782818a7369d5066dfa9477213dc
+    entity_id: switch.chauffage_salle_de_bain
+    domain: switch
+  - service: input_boolean.toggle
+    data: {}
+    target:
+      entity_id: input_boolean.chauffage_sdb
+  mode: single
+- id: '1647419629958'
+  alias: Bouton Salle de bain - Appui double
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: d4707bfedb35c71a105ad9405e3056d6
+    type: action
+    subtype: 'off'
+    discovery_id: 0xec1bbdfffe8c7c79 action_off
+  condition: []
+  action:
+  - type: toggle
+    device_id: 98fa426eb7fe1a0b047524ff377d2bdc
+    entity_id: light.interrupteur_salle_de_bain
+    domain: light
+  mode: single
+- id: '1647419654912'
+  alias: Bouton Salle de bain - Appui long
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: d4707bfedb35c71a105ad9405e3056d6
+    type: action
+    subtype: brightness_move_up
+    discovery_id: 0xec1bbdfffe8c7c79 action_brightness_move_up
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 98fa426eb7fe1a0b047524ff377d2bdc
+    entity_id: light.interrupteur_salle_de_bain
+    domain: light
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.chauffage_sdb
+  - type: turn_off
+    device_id: 193d782818a7369d5066dfa9477213dc
+    entity_id: switch.chauffage_salle_de_bain
+    domain: switch
+  mode: single
+- id: '1647451360968'
+  alias: Fermer le store d'Alice à 21h
+  description: ''
+  trigger:
+  - platform: time
+    at: '21:00:00'
+  condition:
+  - condition: device
+    device_id: 692b4c97989429ae6e429b0b7b52d597
+    domain: cover
+    entity_id: cover.store_chambre_alice
+    type: is_open
+  action:
+  - device_id: 692b4c97989429ae6e429b0b7b52d597
+    domain: cover
+    entity_id: cover.store_chambre_alice
+    type: set_position
+    position: 0
+  mode: single
+- id: '1647685212341'
+  alias: Descendre le screen jardin du coin à manger selon temperature
+  description: ''
+  trigger:
+  - type: temperature
+    platform: device
+    device_id: 8e424bc250dc2ef7d405d153dd1783c4
+    entity_id: sensor.sbm_cuisine_temperature
+    domain: sensor
+    above: 25
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: binary_sensor.porte_terrasse_door
+      state: 'off'
+    - condition: sun
+      before: sunset
+    - condition: sun
+      after: sunrise
+    - condition: numeric_state
+      entity_id: sun.sun
+      attribute: azimuth
+      above: '175'
+    - condition: numeric_state
+      entity_id: sensor.temperature_exterieur_ponderee
+      above: '21'
+  action:
+  - device_id: 14374033c77ddd7edda62486447ccf63
+    domain: cover
+    entity_id: cover.maestria_io_3
+    type: set_position
+    position: 0
+  mode: single
+- id: '1649079233779'
+  alias: Aqara Magic Cube (Z2M)
+  description: ''
+  use_blueprint:
+    path: luckypoppy/z2m-xiaomi-cube-controller.yaml
+    input:
+      remote: zigbee2mqtt/Magic Cube/action
+- id: '1649237447433'
+  alias: Magic Cube Z2M - action
+  description: ''
+  use_blueprint:
+    path: SirGoodenough/Zigbee2MQTT - Xiaomi Cube Controller.yaml
+    input:
+      remote: sensor.magic_cube_action
+      rotate_cw_face_0:
+      - device_id: d5901a5ad0bc36184a07bfdcceb1010b
+        domain: light
+        entity_id: light.lampe_bureau
+        type: brightness_increase
+      rotate_ccw_face_0:
+      - device_id: d5901a5ad0bc36184a07bfdcceb1010b
+        domain: light
+        entity_id: light.lampe_bureau
+        type: brightness_decrease
+      flipped90_face_0: []
+      flipped180_face_0: []
+      slide_face_0:
+      - type: toggle
+        device_id: d5901a5ad0bc36184a07bfdcceb1010b
+        entity_id: light.lampe_bureau
+        domain: light
+      doubletap_face_0:
+      - type: toggle
+        device_id: d5901a5ad0bc36184a07bfdcceb1010b
+        entity_id: light.lampe_bureau
+        domain: light
+      shake:
+      - type: toggle
+        device_id: d5901a5ad0bc36184a07bfdcceb1010b
+        entity_id: light.lampe_bureau
+        domain: light
+      flipped90_face_1: []
+      slide_face_2: []
+      slide_face_1: []
+      rotate_cw_face_3:
+      - service: script.ouvrir_store_bureau
+        data: {}
+      rotate_ccw_face_3:
+      - device_id: ea543bbabf3cb7cef94fe405704cd21e
+        domain: cover
+        entity_id: cover.store_bureau
+        type: set_position
+        position: 0
+- id: '1649856936662'
+  alias: 'Allumer veilleuse - scène '
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: cb383ca24e8c1f447b9c070fc52bfc3c
+    entity_id: binary_sensor.capteur_escalier_occupancy
+    domain: binary_sensor
+  condition:
+  - condition: or
+    conditions:
+    - condition: sun
+      before: sunrise
+    - condition: sun
+      after: sunset
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: input_boolean.lumiere_cave
+      state: 'off'
+  action:
+  - service: scene.turn_on
+    target:
+      entity_id: scene.cocooning_petite_lampe
+    metadata: {}
+  mode: single
+- id: '1649857355092'
+  alias: Christelle quitte le boulot
+  description: ''
+  trigger:
+  - platform: zone
+    entity_id: person.christelle
+    zone: zone.belfius_tower
+    event: leave
+  condition: []
+  action:
+  - service: notify.mobile_app_iphone_de_b
+    data:
+      message: Namour quitte la tour
+  mode: single
+- id: '1649963402438'
+  alias: Allumer le boiler et charge dyson
+  description: ''
+  trigger:
+  - platform: time
+    at: 01:00:00
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 49cef9e464ceb5bca6ccdcc5cce9fb8e
+    entity_id: switch.buanderie
+    domain: switch
+  - type: turn_on
+    device_id: 320b749554a1dd878ae9f493ec6947e6
+    entity_id: switch.prise_station_dyson
+    domain: switch
+  mode: single
+- id: '1649969117439'
+  alias: Allumer charge batterie supplémentaire Dyson
+  description: ''
+  trigger:
+  - platform: time
+    at: '11:00:00'
+  condition:
+  - condition: time
+    weekday:
+    - sat
+  action:
+  - type: turn_on
+    device_id: 86fcd5645f53a4d7153bac62407c3c29
+    entity_id: switch.dyson
+    domain: switch
+  mode: single
+- id: '1650008580992'
+  alias: Couper le boiler et charge dyson
+  description: ''
+  trigger:
+  - platform: time
+    at: 05:00:00
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 49cef9e464ceb5bca6ccdcc5cce9fb8e
+    entity_id: switch.buanderie
+    domain: switch
+  - type: turn_off
+    device_id: 320b749554a1dd878ae9f493ec6947e6
+    entity_id: switch.prise_station_dyson
+    domain: switch
+  mode: single
+- id: '1650140529739'
+  alias: Gas counting
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.compteur_gaz_contact
+    from: 'off'
+    to: 'on'
+  condition: []
+  action:
+  - service: counter.increment
+    data: {}
+    target:
+      entity_id: counter.gas_counter
+  mode: single
+- id: '1650309078335'
+  alias: Allumer poste de travail de Christelle
+  description: ''
+  trigger:
+  - platform: time
+    at: 06:30:00
+  condition:
+  - condition: time
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  action:
+  - type: turn_on
+    device_id: 5ab42cfda4d9e2e15be58dcc2996021d
+    entity_id: switch.ordinateur_christelle
+    domain: switch
+  mode: single
+- id: '1652126605293'
+  alias: Sauvegarde quotidienne
+  description: ''
+  trigger:
+  - platform: time
+    at: 03:00:00
+  condition: []
+  action:
+  - service: backup.create
+    data: {}
+  mode: single
+- id: '1652426634220'
+  alias: Remonter les screens par temps de pluie
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.openweathermap_rain
+    above: '0'
+  condition: []
+  action:
+  - device_id: 14374033c77ddd7edda62486447ccf63
+    domain: cover
+    entity_id: cover.maestria_io_3
+    type: set_position
+    position: 100
+  - device_id: 38b36bcfe500e5f5dcd65c58f10ee088
+    domain: cover
+    entity_id: cover.maestria_io
+    type: set_position
+    position: 100
+  - device_id: 36082533b44b086064277e248b9f7d1e
+    domain: cover
+    entity_id: cover.maestria_io_2
+    type: set_position
+    position: 100
+  mode: single
+- id: '1652801382202'
+  alias: Fermer le screen du salon selon temperature
+  description: ''
+  trigger:
+  - type: temperature
+    platform: device
+    device_id: 06f8b7147b453d7ce6ebf2c2bdd5f362
+    entity_id: sensor.sbm_salon_temperature
+    domain: sensor
+    above: 25
+  condition:
+  - condition: and
+    conditions:
+    - condition: sun
+      before: sunset
+    - condition: sun
+      after: sunrise
+    - condition: numeric_state
+      entity_id: sun.sun
+      attribute: azimuth
+      above: '210'
+  action:
+  - device_id: 38b36bcfe500e5f5dcd65c58f10ee088
+    domain: cover
+    entity_id: cover.maestria_io
+    type: set_position
+    position: 0
+  mode: single
+- id: '1652807937657'
+  alias: Versailles
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 22c921f554f3cc3733c0bc7ac7090e6c
+    type: action
+    subtype: 'on'
+    discovery_id: 0x5c0272fffeab074a action_on
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 2224bbaaf96be4f3c2fc937bf6f7ea76
+    entity_id: light.piece_de_vie
+    domain: light
+  mode: single
+- id: '1654444774002'
+  alias: Etteindre veilleuse  - v 2.0
+  description: ''
+  trigger:
+  - type: no_motion
+    platform: device
+    device_id: cb383ca24e8c1f447b9c070fc52bfc3c
+    entity_id: binary_sensor.capteur_escalier_occupancy
+    domain: binary_sensor
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: input_boolean.cocooning
+      state: 'off'
+    - condition: state
+      entity_id: input_boolean.lumiere_cave
+      state: 'off'
+  action:
+  - type: turn_off
+    device_id: c5024076faa616cae11dc90ba1d0a920
+    entity_id: light.petite_lampe
+    domain: light
+  mode: single
+- id: '1654806172085'
+  alias: Couper chargeur voiture
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.chargeur_voiture_power
+    below: '5'
+  condition:
+  - condition: state
+    entity_id: sensor.2_bws_847_state_of_charge
+    state: '100'
+  action:
+  - type: turn_off
+    device_id: d38bd6482c06e1d239ffdc8e6adf3396
+    entity_id: switch.chargeur_voiture_outlet
+    domain: switch
+  mode: single
+- id: '1654888194199'
+  alias: Charger voiture
+  description: ''
+  trigger:
+  - platform: time
+    at: '22:00:00'
+  condition:
+  - condition: and
+    conditions:
+    - condition: numeric_state
+      entity_id: sensor.2_bws_847_state_of_charge
+      below: '100'
+    - condition: zone
+      entity_id: device_tracker.2_bws_847_device_tracker
+      zone: zone.home
+  action:
+  - type: turn_on
+    device_id: d38bd6482c06e1d239ffdc8e6adf3396
+    entity_id: switch.chargeur_voiture_outlet
+    domain: switch
+  mode: single
+- id: '1655642657166'
+  alias: Machine à laver finie
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.lave_linge_power
+    below: '2'
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  condition:
+  - condition: state
+    entity_id: input_boolean.machine_a_laver_active
+    state: 'on'
+  action:
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.machine_a_laver_active
+  - event: NOTIFIER
+    event_data:
+      action: send_when_present
+      title: Machine à laver
+      message: Le cycle de lavage est terminé
+  mode: single
+- id: '1656794628625'
+  alias: 'Bouton Store cuisine - Appui simple '
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 1142486a9e3bfb5d6e01ea9b5ca09ad3
+    type: action
+    subtype: 'on'
+    discovery_id: 0x8cf681fffe2fd54a action_on
+  condition: []
+  action:
+  - service: script.fermer_les_screens_de_la_cuisine
+    data: {}
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.bloquer_screen_terrasse
+  mode: single
+- id: '1656794776529'
+  alias: Bouton Store cuisine - Appui double
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 1142486a9e3bfb5d6e01ea9b5ca09ad3
+    type: action
+    subtype: 'off'
+    discovery_id: 0x8cf681fffe2fd54a action_off
+  condition: []
+  action:
+  - service: script.remonter_les_screens_de_la_cuisine
+    data: {}
+  mode: single
+- id: '1656795061432'
+  alias: 'Bouton store cuisine - Appui long '
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 1142486a9e3bfb5d6e01ea9b5ca09ad3
+    type: action
+    subtype: brightness_move_up
+    discovery_id: 0x8cf681fffe2fd54a action_brightness_move_up
+  condition: []
+  action:
+  - device_id: 36082533b44b086064277e248b9f7d1e
+    domain: cover
+    entity_id: cover.maestria_io_2
+    type: set_position
+    position: 100
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.bloquer_screen_terrasse
+  mode: single
+- id: '1657647068621'
+  alias: 'Descendre le screen Terrasse du coin à manger selon température '
+  description: ''
+  trigger:
+  - type: temperature
+    platform: device
+    device_id: 8e424bc250dc2ef7d405d153dd1783c4
+    entity_id: sensor.sbm_cuisine_temperature
+    domain: sensor
+    above: 25
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: binary_sensor.porte_terrasse_door
+      state: 'off'
+    - condition: sun
+      before: sunset
+    - condition: sun
+      after: sunrise
+    - condition: numeric_state
+      entity_id: sun.sun
+      attribute: azimuth
+      above: '175'
+    - condition: state
+      entity_id: input_boolean.bloquer_screen_terrasse
+      state: 'off'
+    - condition: numeric_state
+      entity_id: sensor.temperature_exterieur_ponderee
+      above: '21'
+  action:
+  - device_id: 36082533b44b086064277e248b9f7d1e
+    domain: cover
+    entity_id: cover.maestria_io_2
+    type: set_position
+    position: 0
+  mode: single
+- id: '1658765667110'
+  alias: Bouton Chambre Pauline - Appui simple
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 198d9fc11cd187146e0c75b601bcef7a
+    type: action
+    subtype: 'on'
+    discovery_id: 0x003c84fffe21662a action_on
+  condition: []
+  action:
+  - type: toggle
+    device_id: 3bb836acb043d6f3668c011638768a25
+    entity_id: light.bureau_pauline
+    domain: light
+  mode: single
+- id: '1658776412168'
+  alias: Bouton Chambre Pauline - Appui double
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 198d9fc11cd187146e0c75b601bcef7a
+    type: action
+    subtype: 'off'
+    discovery_id: 0x003c84fffe21662a action_off
+  condition: []
+  action:
+  - type: toggle
+    device_id: 041e6e0d1b831710881e36e54a20f3a3
+    entity_id: light.lampe_chambre_pauline
+    domain: light
+  mode: single
+- id: '1658776540470'
+  alias: 'Bouton Chambre Pauline - Appui long '
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 198d9fc11cd187146e0c75b601bcef7a
+    type: action
+    subtype: brightness_move_up
+    discovery_id: 0x003c84fffe21662a action_brightness_move_up
+  condition: []
+  action:
+  - service: script.store_pauline
+    data: {}
+  mode: single
+- id: '1659368478771'
+  alias: Bouton Chambre Alice - Appui simple
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 196093d952bf94cd3e707e7c30aeafc7
+    type: action
+    subtype: 'on'
+    discovery_id: 0x003c84fffe23d98e action_on
+  condition: []
+  action:
+  - type: toggle
+    device_id: 25fddab5cf5cd1bddbce0699cc44d921
+    entity_id: light.lampe_chambre_alice
+    domain: light
+  mode: single
+- id: '1659520224128'
+  alias: Descendre le screen jardin du coin à manger selon soleil
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sun.sun
+    attribute: azimuth
+    above: '200'
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: binary_sensor.porte_terrasse_door
+      state: 'off'
+    - condition: sun
+      before: sunset
+    - condition: sun
+      after: sunrise
+    - condition: numeric_state
+      entity_id: sensor.sbm_cuisine_temperature
+      above: '25'
+  action:
+  - device_id: 14374033c77ddd7edda62486447ccf63
+    domain: cover
+    entity_id: cover.maestria_io_3
+    type: set_position
+    position: 0
+  mode: single
+- id: '1659520344032'
+  alias: Descendre le screen Terrasse du coin à manger selon soleil
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sun.sun
+    attribute: azimuth
+    above: '200'
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: binary_sensor.porte_terrasse_door
+      state: 'off'
+    - condition: sun
+      before: sunset
+    - condition: sun
+      after: sunrise
+    - condition: numeric_state
+      entity_id: sensor.sbm_cuisine_temperature
+      above: '25'
+    - condition: state
+      entity_id: input_boolean.bloquer_screen_terrasse
+      state: 'off'
+  action:
+  - device_id: 36082533b44b086064277e248b9f7d1e
+    domain: cover
+    entity_id: cover.maestria_io_2
+    type: set_position
+    position: 0
+  mode: single
+- id: '1659520858351'
+  alias: Bouton Chambre Alice - Appui double
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 196093d952bf94cd3e707e7c30aeafc7
+    type: action
+    subtype: 'off'
+    discovery_id: 0x003c84fffe23d98e action_off
+  condition: []
+  action:
+  - service: script.store_alice
+    data: {}
+  mode: single
+- id: '1659526516429'
+  alias: 'Fermer le screen du salon selon soleil '
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sun.sun
+    attribute: azimuth
+    above: '215'
+  condition:
+  - condition: and
+    conditions:
+    - condition: sun
+      before: sunset
+    - condition: sun
+      after: sunrise
+    - condition: numeric_state
+      entity_id: sensor.sbm_salon_temperature
+      above: '25'
+  action:
+  - device_id: 38b36bcfe500e5f5dcd65c58f10ee088
+    domain: cover
+    entity_id: cover.maestria_io
+    type: set_position
+    position: 0
+  mode: single
+- id: '1661093414362'
+  alias: Machine à laver active
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.lave_linge_power
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+    above: 40
+  condition: []
+  action:
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.machine_a_laver_active
+  mode: single
+- id: '1661717015179'
+  alias: Eteindre chauffage de la salle de bain au dessus de 21
+  description: ''
+  trigger:
+  - type: temperature
+    platform: device
+    device_id: 5f236e20d4828587be6c078eaaf75dba
+    entity_id: sensor.sbm_salle_de_bain_temperature
+    domain: sensor
+    above: 21
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 193d782818a7369d5066dfa9477213dc
+    entity_id: switch.chauffage_salle_de_bain
+    domain: switch
+  mode: single
+- id: '1661957737746'
+  alias: 'Notification ouverture porte terrasse '
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: 21b5d032cda16116b1f2a896b8accda8
+    entity_id: binary_sensor.porte_terrasse_door
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: notify.mobile_app_iphone
+    data:
+      title: 'Porte terrasse '
+      message: La porte est ouverte
+    enabled: false
+  - service: notify.pushover
+    data:
+      target: iphonedeC iphonedeB
+      title: Porte terrasse
+      message: La porte est ouverte
+  mode: single
+- id: '1661957809975'
+  alias: Notification fermeture porte terrasse
+  description: ''
+  trigger:
+  - type: not_opened
+    platform: device
+    device_id: 21b5d032cda16116b1f2a896b8accda8
+    entity_id: binary_sensor.porte_terrasse_door
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: notify.mobile_app_iphone
+    data:
+      title: 'Porte terrasse '
+      message: La porte est fermée
+    enabled: false
+  - service: notify.pushover
+    data:
+      target: iphonedeC iphonedeB
+      title: Porte terrasse
+      message: La porte est fermée
+  mode: single
+- id: '1663857255310'
+  alias: 'Lorsque la TV s''éteint '
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.tv
+    from: 'on'
+    to: 'off'
+    enabled: false
+  - platform: state
+    entity_id:
+    - media_player.tv_du_salon_television
+    from: 'on'
+    to: 'off'
+  condition:
+  - condition: state
+    entity_id: input_boolean.tv
+    state: 'on'
+  action:
+  - type: turn_off
+    device_id: 7b4aeafd390c5780a7f24ede0d8ac9bb
+    entity_id: switch.double_prise_salon_outlet_3
+    domain: switch
+  - service: script.extinction_tv
+    data: {}
+  mode: single
+- id: '1663857437915'
+  alias: Lorsque la TV s'allume
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.tv
+    from: 'off'
+    to: 'on'
+    enabled: false
+  - platform: state
+    entity_id:
+    - media_player.tv_du_salon_television
+    from: 'off'
+    to: 'on'
+    enabled: false
+  - platform: state
+    entity_id:
+    - input_boolean.tv
+    from: 'off'
+    to: 'on'
+  condition:
+  - condition: or
+    conditions:
+    - condition: sun
+      before: sunrise
+    - condition: sun
+      after: sunset
+  action:
+  - type: turn_on
+    device_id: 47188f8802fc78444b3feff322d24b4f
+    entity_id: light.lampe_tv
+    domain: light
+    brightness_pct: 50
+  mode: single
+- id: '1663858913906'
+  alias: 'Action au crépuscule '
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunset
+    offset: '0'
+  condition: []
+  action:
+  - service: script.fermer_les_stores_des_chambres
+    data: {}
+  - device_id: 2407abe1898292d36c0503325c806d58
+    domain: cover
+    entity_id: cover.store_salle_a_manger
+    type: set_position
+    position: 0
+  - device_id: ea543bbabf3cb7cef94fe405704cd21e
+    domain: cover
+    entity_id: cover.store_bureau
+    type: set_position
+    position: 0
+  - if:
+    - condition: state
+      entity_id: binary_sensor.home_occupied
+      state: 'on'
+    then:
+    - service: scene.turn_on
+      target:
+        entity_id: scene.cocooning_petite_lampe
+      metadata: {}
+    - service: input_boolean.turn_on
+      data: {}
+      target:
+        entity_id: input_boolean.cocooning
+    enabled: false
+  - service: scene.turn_on
+    data: {}
+    target:
+      entity_id: scene.cocooning_petite_lampe
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.cocooning
+  - if:
+    - condition: state
+      entity_id: media_player.tv_du_salon_television
+      state: 'on'
+    then:
+    - type: turn_on
+      device_id: 47188f8802fc78444b3feff322d24b4f
+      entity_id: light.lampe_tv
+      domain: light
+      brightness_pct: 50
+  - service: script.ouvrir_les_screens
+    data: {}
+  mode: single
+- id: '1663870304918'
+  alias: Allumer le chauffage de la salle de bain en dessous de 21
+  description: ''
+  trigger:
+  - type: temperature
+    platform: device
+    device_id: 5f236e20d4828587be6c078eaaf75dba
+    entity_id: sensor.sbm_salle_de_bain_temperature
+    domain: sensor
+    below: 21
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: binary_sensor.shelly_door_window_2_e8db84d235ea_opening
+      state: 'off'
+      enabled: false
+    - condition: state
+      entity_id: input_boolean.chauffage_sdb
+      state: 'on'
+    - condition: state
+      entity_id: binary_sensor.shellydw2_e8db84d235ea_door
+      state: 'off'
+  action:
+  - type: turn_on
+    device_id: 193d782818a7369d5066dfa9477213dc
+    entity_id: switch.chauffage_salle_de_bain
+    domain: switch
+    enabled: true
+  mode: single
+- id: '1664384109024'
+  alias: Eteindre chauffage de la salle de bain à 19h
+  description: ''
+  trigger:
+  - platform: time
+    at: '19:00:00'
+  condition:
+  - condition: state
+    entity_id: input_boolean.chauffage_sdb
+    state: 'on'
+  action:
+  - type: turn_off
+    device_id: 193d782818a7369d5066dfa9477213dc
+    entity_id: switch.chauffage_salle_de_bain
+    domain: switch
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.chauffage_sdb
+  mode: single
+- id: '1664396558069'
+  alias: Allumer le chauffage de la salle de bain à 5h
+  description: ''
+  trigger:
+  - platform: time
+    at: 04:45:00
+  condition:
+  - condition: time
+    weekday:
+    - fri
+    - thu
+    - wed
+    - mon
+    - tue
+  action:
+  - service: script.allumer_chauffage_salle_de_bain
+    data: {}
+  mode: single
+- id: '1664396625119'
+  alias: Eteindre chauffage de la salle de bain à 5h30
+  description: ''
+  trigger:
+  - platform: time
+    at: 05:30:00
+  condition:
+  - condition: state
+    entity_id: input_boolean.chauffage_sdb
+    state: 'on'
+  action:
+  - type: turn_off
+    device_id: 193d782818a7369d5066dfa9477213dc
+    entity_id: switch.chauffage_salle_de_bain
+    domain: switch
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.chauffage_sdb
+  mode: single
+- id: '1664396797239'
+  alias: Allumer le chauffage de la salle de bain à 18h
+  description: ''
+  trigger:
+  - platform: time
+    at: '18:00:00'
+  condition:
+  - condition: time
+    weekday:
+    - tue
+    - wed
+    - thu
+    - fri
+    - sun
+  action:
+  - service: script.allumer_chauffage_salle_de_bain
+    data: {}
+  mode: single
+- id: '1664422936443'
+  alias: Allumer le chauffage de la salle de bain à 6h
+  description: ''
+  trigger:
+  - platform: time
+    at: 06:00:00
+    enabled: true
+  - platform: calendar
+    event: start
+    offset: -0:0:0
+    entity_id: calendar.chauffage
+    enabled: true
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: binary_sensor.workday_today
+      state: 'on'
+    enabled: true
+  action:
+  - service: script.allumer_chauffage_salle_de_bain
+    data: {}
+  mode: single
+- id: '1664513133829'
+  alias: Eteindre chauffage de la salle de bain à 6h30
+  description: ''
+  trigger:
+  - platform: time
+    at: 06:30:00
+  condition:
+  - condition: state
+    entity_id: input_boolean.chauffage_sdb
+    state: 'on'
+  action:
+  - type: turn_off
+    device_id: 193d782818a7369d5066dfa9477213dc
+    entity_id: switch.chauffage_salle_de_bain
+    domain: switch
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.chauffage_sdb
+  mode: single
+- id: '1664813811970'
+  alias: Allumer le chauffage de la salle de bain à 18h20 le lundi
+  description: ''
+  trigger:
+  - platform: time
+    at: '18:20:00'
+  condition:
+  - condition: time
+    weekday:
+    - mon
+  action:
+  - service: script.allumer_chauffage_salle_de_bain
+    data: {}
+  mode: single
+- id: '1664814331058'
+  alias: Couper le chauffage de la salle de bain si porte ouverte
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: e74542d0a2dc4980c39e32dda62ea761
+    entity_id: binary_sensor.shelly_door_window_2_e8db84d235ea_opening
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: script.couper_le_chauffage_de_la_salle_de_bain_si_porte_restee_ouverte
+    data: {}
+  mode: single
+- id: '1664814420530'
+  alias: Remettre le chauffage de la salle de bain après fermeture porte
+  description: ''
+  trigger:
+  - type: not_opened
+    platform: device
+    device_id: e74542d0a2dc4980c39e32dda62ea761
+    entity_id: binary_sensor.shelly_door_window_2_e8db84d235ea_opening
+    domain: binary_sensor
+  condition:
+  - condition: state
+    entity_id: switch.chauffage_salle_de_bain
+    state: 'on'
+  action:
+  - type: turn_on
+    device_id: 193d782818a7369d5066dfa9477213dc
+    entity_id: switch.shelly_plug_s_0d2862_relay_0
+    domain: switch
+  mode: single
+- id: '1666292316185'
+  alias: Eteindre la lampe extérieure avec entrée par le garage
+  description: ''
+  trigger:
+  - platform: device
+    device_id: 42eafdb88cab68ac100ee20c524cd6a7
+    domain: cover
+    entity_id: cover.commande_porte_garage_garage
+    type: closed
+  condition:
+  - condition: device
+    type: is_on
+    device_id: 7fa1ce038252fafe544b8ed585aada1e
+    entity_id: light.lampe_exterieure_entree
+    domain: light
+  action:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 15
+      milliseconds: 0
+  - type: turn_off
+    device_id: 7fa1ce038252fafe544b8ed585aada1e
+    entity_id: light.lampe_exterieure_entree
+    domain: light
+  mode: single
+- id: '1668515259991'
+  alias: Bouton Chambre Alice - Appui long
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 196093d952bf94cd3e707e7c30aeafc7
+    type: action
+    subtype: brightness_move_up
+    discovery_id: 0x003c84fffe23d98e action_brightness_move_up
+  condition: []
+  action:
+  - type: toggle
+    device_id: e4c6ee201053f7ea9735ab754655ea94
+    entity_id: light.led_bureau_alice
+    domain: light
+  mode: single
+- id: '1668894547864'
+  alias: Allumer lampe extérieure en arrivant
+  description: ''
+  trigger:
+  - platform: zone
+    entity_id: person.christelle
+    zone: zone.home
+    event: enter
+  - platform: zone
+    entity_id: person.benjamin_puissant
+    zone: zone.home
+    event: enter
+  - platform: zone
+    entity_id: person.alice
+    zone: zone.home
+    event: enter
+  - platform: zone
+    entity_id: person.pauline
+    zone: zone.home
+    event: enter
+  condition:
+  - condition: or
+    conditions:
+    - condition: sun
+      before: sunrise
+    - condition: sun
+      after: sunset
+  action:
+  - type: turn_on
+    device_id: 7fa1ce038252fafe544b8ed585aada1e
+    entity_id: light.lampe_exterieure_entree
+    domain: light
+  mode: single
+- id: '1670278220583'
+  alias: Activation TV
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.prise_multimedia_power
+    above: 70
+  condition: []
+  action:
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.tv
+  mode: single
+- id: '1670329598027'
+  alias: Allumer la TV le midi
+  description: ''
+  trigger:
+  - platform: time
+    at: '11:55:00'
+  condition:
+  - condition: state
+    entity_id: binary_sensor.home_occupied
+    state: 'on'
+  action:
+  - type: turn_on
+    device_id: fdf9567d94fa4962e3636257701f4a4a
+    entity_id: switch.prise_multimedia
+    domain: switch
+  mode: single
+- id: '1670329729176'
+  alias: Couper la prise TV après enregistrement programmé
+  description: ''
+  trigger:
+  - platform: time
+    at: 01:30:00
+  condition:
+  - condition: state
+    entity_id: input_boolean.tv
+    state: 'off'
+  action:
+  - type: turn_off
+    device_id: fdf9567d94fa4962e3636257701f4a4a
+    entity_id: switch.prise_multimedia
+    domain: switch
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.enregistrement_en_cours
+  mode: single
+- id: '1670504710534'
+  alias: Couper la charge de la batterie Dyson
+  description: ''
+  trigger:
+  - platform: time
+    at: '17:00:00'
+  condition:
+  - condition: time
+    weekday:
+    - sat
+  action:
+  - type: turn_off
+    device_id: 86fcd5645f53a4d7153bac62407c3c29
+    entity_id: switch.dyson
+    domain: switch
+  mode: single
+- id: '1670505036719'
+  alias: Activer coupure moteur porte du garage si maison vide
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.home_occupied
+    from: 'on'
+    to: 'off'
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 5bd6b9e5bcbe4177685bbcd88c357a05
+    entity_id: switch.smart_switch_garage_outlet_3
+    domain: switch
+  mode: single
+- id: '1670505086362'
+  alias: Activer alimentation moteur porte du garage si maison occupée
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.home_occupied
+    from: 'off'
+    to: 'on'
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 5bd6b9e5bcbe4177685bbcd88c357a05
+    entity_id: switch.smart_switch_garage_outlet_3
+    domain: switch
+  mode: single
+- id: '1671637020455'
+  alias: Pauline rentre de Mons
+  description: ''
+  trigger:
+  - platform: zone
+    entity_id: person.pauline
+    zone: zone.mons
+    event: leave
+  condition: []
+  action:
+  - event: NOTIFIER
+    event_data:
+      action: send_to_all
+      title: Taxi
+      message: Pauline vient de quitter Mons, prévoir d'aller à la gare
+  mode: single
+- id: '1673129713460'
+  alias: 'Allumer lampe entrée - extérieur '
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 8811fded0ccf567c831a4a0f82462a8b
+    entity_id: binary_sensor.capteur_exterieur_occupancy
+    domain: binary_sensor
+  condition:
+  - condition: or
+    conditions:
+    - condition: sun
+      before: sunrise
+    - condition: sun
+      after: sunset
+    - condition: numeric_state
+      entity_id: sensor.capteur_exterieur_illuminance_lux
+      below: 25
+  action:
+  - type: turn_on
+    device_id: 7fa1ce038252fafe544b8ed585aada1e
+    entity_id: light.lampe_exterieure_entree
+    domain: light
+  mode: single
+- id: '1673129778284'
+  alias: Eteindre lampe entrée - extérieur
+  description: ''
+  trigger:
+  - type: no_motion
+    platform: device
+    device_id: 8811fded0ccf567c831a4a0f82462a8b
+    entity_id: binary_sensor.capteur_exterieur_occupancy
+    domain: binary_sensor
+  condition:
+  - condition: numeric_state
+    entity_id: sensor.capteur_exterieur_illuminance_lux
+    below: 25
+  action:
+  - type: turn_off
+    device_id: 7fa1ce038252fafe544b8ed585aada1e
+    entity_id: light.lampe_exterieure_entree
+    domain: light
+  mode: single
+- id: '1673258727442'
+  alias: Notification mouvement devant la porte
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 8811fded0ccf567c831a4a0f82462a8b
+    entity_id: binary_sensor.capteur_exterieur_occupancy
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: persistent_notification.create
+    data:
+      message: 'Un mouvement est détecté '
+      title: Capteur extérieur.
+  mode: single
+- id: '1673678769562'
+  alias: 'Automatisation suivant calendrier '
+  description: ''
+  trigger:
+  - platform: calendar
+    event: start
+    offset: -0:0:0
+    entity_id: calendar.onsite
+  condition: []
+  action:
+  - service: notify.mobile_app_iphone_de_b
+    data:
+      title: Calendrier
+      message: 'Début d''événement '
+  - service: notify.persistent_notification
+    data:
+      title: Calendrier
+      message: Evenement calendrier
+  mode: single
+- id: '1674549266497'
+  alias: Couper le chauffage du bureau
+  description: ''
+  trigger:
+  - platform: time
+    at: '17:00:00'
+  condition: []
+  action:
+  - device_id: c8fd60b122c5cf1a1c546788dba4aca1
+    domain: climate
+    entity_id: climate.valve_radiateur_bureau
+    type: set_hvac_mode
+    hvac_mode: 'off'
+  - device_id: 9310679d41ad0eef0376d6ef30952b4c
+    domain: climate
+    entity_id: climate.bureau
+    type: set_hvac_mode
+    hvac_mode: 'off'
+  mode: single
+- id: '1674549328350'
+  alias: Allumer le chauffage du bureau
+  description: ''
+  trigger:
+  - platform: time
+    at: 05:30:00
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: binary_sensor.workday_today
+      state: 'on'
+    enabled: true
+  action:
+  - device_id: c8fd60b122c5cf1a1c546788dba4aca1
+    domain: climate
+    entity_id: climate.valve_radiateur_bureau
+    type: set_hvac_mode
+    hvac_mode: heat
+  - device_id: 9310679d41ad0eef0376d6ef30952b4c
+    domain: climate
+    entity_id: climate.bureau
+    type: set_hvac_mode
+    hvac_mode: heat
+  mode: single

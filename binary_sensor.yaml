@@ -1,0 +1,45 @@
+- platform: workday
+  name: 'workday_today' 
+  country: BE
+  add_holidays:
+      - "2022-12-26"
+      - "2022-12-27"
+
+# Workday (Tomorrow)
+- platform: workday
+  name: 'workday_tomorrow' 
+  country: BE
+  days_offset: 1
+  add_holidays:
+      - "2022-12-26"
+      - "2022-12-27"
+  
+# Portainer
+- platform: command_line
+  name: "Portainer Online"
+  unique_id: portainer_online
+  command: response=$(curl -LIk -m 3 https://10.2.30.151:9443 -o /dev/null -w "%{http_code}\n" -s); test "$response" -ge 200 && echo "Online" || echo "Offline"
+  scan_interval: 90
+  device_class: running
+  payload_on: "Online"
+  payload_off: "Offline"
+  
+# heimdall
+- platform: command_line
+  name: "Heimdall Online"
+  unique_id: heimdall_online
+  command: response=$(curl -LIk -m 3 http://10.2.30.151:2580 -o /dev/null -w "%{http_code}\n" -s); test "$response" -ge 200 && echo "Online" || echo "Offline"
+  scan_interval: 90
+  device_class: running
+  payload_on: "Online"
+  payload_off: "Offline"
+  
+# Zigbee2MQTT
+- platform: command_line
+  name: "Zigbee2MQTT Online"
+  unique_id: z2m_online
+  command: response=$(curl -LIk -m 3 http://10.2.30.151:2580 -o /dev/null -w "%{http_code}\n" -s); test "$response" -ge 200 && echo "Online" || echo "Offline"
+  scan_interval: 90
+  device_class: running
+  payload_on: "Online"
+  payload_off: "Offline"

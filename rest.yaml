@@ -1,0 +1,56 @@
+## Train P7782
+  - resource: https://api.irail.be/vehicle/?lang=fr&id=BE.NMBS.P7782&format=json
+    method: GET
+    scan_interval: 900 
+    sensor:
+      - name: Train P7782 Départ
+        unique_id: train_p7782_depart_manage
+        icon: mdi:train
+        json_attributes_path: "$.stops.stop[0]"
+        value_template: "{{ ((value_json.stops.stop[0]['time']) | int) |  timestamp_custom('%H:%M') }}"
+        json_attributes:
+          - station
+          - delay
+          - platform
+          - departureDelay
+          - canceled
+      - name: Train P7782 Arrivé
+        unique_id: train_p7782_arrive_blc
+        icon: mdi:train
+        json_attributes_path: "$.stops.stop[4]"
+        value_template: "{{ ((value_json.stops.stop[4]['time']) | int) |  timestamp_custom('%H:%M') }}"
+        json_attributes:
+          - station
+          - delay
+          - platform
+          - departureDelay
+          - canceled
+          
+## Train P8781
+  - resource: https://api.irail.be/vehicle/?lang=fr&id=BE.NMBS.P8781&format=json
+    method: GET
+    scan_interval: 900 
+    sensor:
+      - name: Train P8781 Départ
+        unique_id: train_p8781_depart_blc
+        icon: mdi:train
+        json_attributes_path: "$.stops.stop[0]"
+        value_template: "{{ ((value_json.stops.stop[0]['time']) | int) |  timestamp_custom('%H:%M') }}"
+        json_attributes:
+          - station
+          - delay
+          - platform
+          - departureDelay
+          - canceled
+      - name: Train P8781 Arrivé
+        unique_id: train_p8781_arrive_blc
+        icon: mdi:train
+        json_attributes_path: "$.stops.stop[4]"
+        value_template: "{{ ((value_json.stops.stop[4]['time']) | int) |  timestamp_custom('%H:%M') }}"
+        json_attributes:
+          - station
+          - delay
+          - platform
+          - departureDelay
+          - canceled
+          

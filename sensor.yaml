@@ -1,0 +1,315 @@
+## Train entre Manage & Bruxelles-nord
+  - platform: nmbs
+    name: Train Aller
+    station_from: Manage
+    station_to: Bruxelles-Nord
+    station_live: Manage
+    
+## train entre Bruxelles-Nord et Manage
+  - platform: nmbs
+    name: Train Retour
+    station_from: Bruxelles-nord
+    station_to: Manage
+    
+## Raspbery Pi
+  - platform: systemmonitor
+    resources:
+      - type: disk_use_percent
+      - type: memory_use_percent
+      - type: swap_use_percent
+      - type: last_boot
+      - type: processor_temperature
+      - type: processor_use
+
+
+## AP BB-8 - Sous-sol
+  - platform: command_line
+    command: 'python3 /config/python_scripts/bb8.py'
+    command_timeout: 60
+    name: BB-8
+    value_template: '{{ value_json.Clients }}'
+    unit_of_measurement: Clients
+    scan_interval: 60
+    json_attributes:
+      - Guests
+      - Clients_wifi0
+      - Clients_wifi1
+      - Score  
+      - CPU
+      - RAM
+      - Uptime
+      - Score_wifi0
+      - Score_wifi1
+      - Activity
+      - Update
+      
+## AP R2-D2 - Rez-de-chaussée
+  - platform: command_line
+    command: 'python3 /config/python_scripts/r2d2.py'
+    command_timeout: 60
+    name: R2-D2
+    value_template: '{{ value_json.Clients }}'
+    unit_of_measurement: Clients
+    scan_interval: 60
+    json_attributes:
+      - Guests
+      - Clients_wifi0
+      - Clients_wifi1
+      - Score  
+      - CPU
+      - RAM
+      - Uptime
+      - Score_wifi0
+      - Score_wifi1
+      - Activity
+      - Update
+    
+    
+# Fete du jour
+  - platform: rest
+    resource: https://fetedujour.fr/api/v2/68esCVpHGUY1fAqX/json
+    name: Fete du jour
+    unique_id: fete_du_jour
+    scan_interval: 900
+    value_template: "{{ value_json.name }}"
+
+# Capture prix officiel des carburants
+
+  - platform: rest
+    name: Prix euro95e10
+    unique_id: prix_euro95e10_officiel
+    icon: mdi:gas-station
+    resource: https://bestat.statbel.fgov.be/bestat/api/views/665e2960-bf86-4d64-b4a8-90f2d30ea892/result/JSON
+    scan_interval: 900
+    method: GET
+    unit_of_measurement: '€/l'
+    value_template: "{{ value_json.facts[1]['Price incl. VAT'] | round(3) }}"
+    json_attributes_path: "$.facts[1]"
+    json_attributes:
+      - 'Product group'
+      - 'Product'
+      - 'Day'
+      - 'Price excl. VAT'
+      - 'Price difference excl. VAT'
+      - 'Price incl. VAT'
+      
+       
+  - platform: rest
+    name: Prix dieselb7
+    unique_id: prix_dieselb7_officiel
+    icon: mdi:gas-station
+    resource: https://bestat.statbel.fgov.be/bestat/api/views/665e2960-bf86-4d64-b4a8-90f2d30ea892/result/JSON
+    scan_interval: 900
+    method: GET
+    force_update: true
+    unit_of_measurement: '€/l'
+    value_template: "{{ value_json.facts[4]['Price incl. VAT'] | round(3) }}"
+    json_attributes_path: "$.facts[4]"
+    json_attributes:
+      - 'Product group'
+      - 'Product'
+      - 'Day'
+      - 'Price excl. VAT'
+      - 'Price difference excl. VAT'
+      - 'Price incl. VAT'
+      
+## Capture prix gazole Auchan Louvroil
+  - platform: rest
+    name: Prix gazole Auchan Louvroil
+    unique_id: prix_gazole_auchan_louvroil
+    icon: mdi:gas-station
+    resource: https://data.economie.gouv.fr/explore/dataset/prix-carburants-fichier-instantane-test-ods-copie/download/?format=json&q=Louvroil&refine.prix_nom=Gazole&timezone=Europe/Berlin&lang=fr
+    scan_interval: 900
+    method: GET
+    force_update: true
+    unit_of_measurement: '€/l'
+    value_template: "{{ value_json.0.fields['prix_valeur'] | round(3) }}"
+    json_attributes_path: "$.0.fields"
+    json_attributes:
+      - 'prix_valeur'
+      - 'prix_nom'
+      - 'prix_maj'
+      - 'dep_name'
+      - 'com_code'
+      - 'com_name'
+      - 'reg_name'
+      - 'dep_name'
+      - 'horaires_automate_24_24'
+      - 'dep_code'
+      - 'ville'
+      - 'adresse'
+      
+## Capture prix gazole InterMarché Hautmont
+  - platform: rest
+    name: Prix gazole InterMarché Hautmont
+    unique_id: prix_gazole_intermache_hautmont
+    icon: mdi:gas-station
+    resource: https://data.economie.gouv.fr/explore/dataset/prix-carburants-fichier-instantane-test-ods-copie/download/?format=json&refine.prix_nom=Gazole&q=hautmont&timezone=Europe/Berlin&lang=fr
+    scan_interval: 900
+    method: GET
+    force_update: true
+    unit_of_measurement: '€/l'
+    value_template: "{{ value_json.0.fields['prix_valeur'] | round(3) }}"
+    json_attributes_path: "$.0.fields"
+    json_attributes:
+      - 'prix_valeur'
+      - 'prix_nom'
+      - 'prix_maj'
+      - 'dep_name'
+      - 'com_code'
+      - 'com_name'
+      - 'reg_name'
+      - 'dep_name'
+      - 'horaires_automate_24_24'
+      - 'dep_code'
+      - 'ville'
+      - 'adresse'
+
+## Capture prix gazole InterMarché Terre Rouge Cahors
+  - platform: rest
+    name: Prix gazole InterMarché Terre Rouge
+    unique_id: prix_gazole_intermache_terrerouge
+    icon: mdi:gas-station
+    resource: https://data.economie.gouv.fr/explore/dataset/prix-carburants-fichier-instantane-test-ods-copie/download/?format=json&refine.prix_nom=Gazole&q=cahors&refine.adresse=Avenue+Edouard+Herriot&timezone=Europe/Berlin&lang=fr
+    scan_interval: 900
+    method: GET
+    force_update: true
+    unit_of_measurement: '€/l'
+    value_template: "{{ value_json.0.fields['prix_valeur'] | round(3) }}"
+    json_attributes_path: "$.0.fields"
+    json_attributes:
+      - 'prix_valeur'
+      - 'prix_nom'
+      - 'prix_maj'
+      - 'dep_name'
+      - 'com_code'
+      - 'com_name'
+      - 'reg_name'
+      - 'dep_name'
+      - 'horaires_automate_24_24'
+      - 'dep_code'
+      - 'ville'
+      - 'adresse'
+      
+## Capture prix gazole Leclerc Cahors
+  - platform: rest
+    name: Prix gazole Leclerc Cahors
+    unique_id: prix_gazole_leclerc_cahors
+    icon: mdi:gas-station
+    resource: https://data.economie.gouv.fr/explore/dataset/prix-carburants-fichier-instantane-test-ods-copie/download/?format=json&refine.prix_nom=Gazole&q=cahors&refine.adresse=Route+de+Luzech&timezone=Europe/Berlin&lang=fr
+    scan_interval: 900
+    method: GET
+    force_update: true
+    unit_of_measurement: '€/l'
+    value_template: "{{ value_json.0.fields['prix_valeur'] | round(3) }}"
+    json_attributes_path: "$.0.fields"
+    json_attributes:
+      - 'prix_valeur'
+      - 'prix_nom'
+      - 'prix_maj'
+      - 'dep_name'
+      - 'com_code'
+      - 'com_name'
+      - 'reg_name'
+      - 'dep_name'
+      - 'horaires_automate_24_24'
+      - 'dep_code'
+      - 'ville'
+      - 'adresse'
+
+## Capture prix gazole Leclerc Bernay
+  - platform: rest
+    name: Prix gazole Leclerc Bernay
+    unique_id: prix_gazole_leclerc_bernay
+    icon: mdi:gas-station
+    resource: https://data.economie.gouv.fr/explore/dataset/prix-carburants-fichier-instantane-test-ods-copie/download/?format=json&refine.prix_nom=Gazole&q=bernay&refine.ville=MENNEVAL&timezone=Europe/Berlin&lang=fr
+    scan_interval: 900
+    method: GET
+    force_update: true
+    unit_of_measurement: '€/l'
+    value_template: "{{ value_json.0.fields['prix_valeur'] | round(3) }}"
+    json_attributes_path: "$.0.fields"
+    json_attributes:
+      - 'prix_valeur'
+      - 'prix_nom'
+      - 'prix_maj'
+      - 'dep_name'
+      - 'com_code'
+      - 'com_name'
+      - 'reg_name'
+      - 'dep_name'
+      - 'horaires_automate_24_24'
+      - 'dep_code'
+      - 'ville'
+      - 'adresse'
+      
+## Prix Lukoil deportation
+  - platform: command_line
+    name: sonde_prix_diesel_lukoil_deportation
+    unique_id: sonde_prix_diesel_lukoil_deportation
+    command: "curl https://carbu.com/belgique/index.php/station/lukoil-express/haine-saint-paul/7100/898 | grep '<h2 class=\"title\">Diesel (B7)</h2>' -A6 | grep price | cut -d'>' -f2 | cut -d' ' -f1 | tr ',' '.'"
+    unit_of_measurement: "€/l"
+    scan_interval: 900
+  - platform: command_line
+    name: sonde_prix_euro95_lukoil_deportation
+    unique_id: sonde_prix_euro95_lukoil_deportation
+    command: "curl https://carbu.com/belgique/index.php/station/lukoil-express/haine-saint-paul/7100/898 | grep '<h2 class=\"title\">Super 95 (E10)</h2>' -A6 | grep price | cut -d'>' -f2 | cut -d' ' -f1 | tr ',' '.'"
+    unit_of_measurement: "€/l"
+    scan_interval: 900
+        
+## Prix esso express HSP
+  - platform: command_line
+    name: sonde_prix_diesel_esso_express_hsp
+    unique_id: sonde_prix_diesel_esso_express_hsp
+    command: "curl https://carbu.com/belgique/index.php/station/esso-express/haine-saint-paul/7100/1429 | grep '<h2 class=\"title\">Diesel (B7)</h2>' -A6 | grep price | cut -d'>' -f2 | cut -d' ' -f1 | tr ',' '.'"
+    unit_of_measurement: "€/l"
+    scan_interval: 900
+  - platform: command_line
+    name: sonde_prix_euro95_esso_express_hsp
+    unique_id: sonde_prix_euro95_esso_express_hsp
+    command: "curl https://carbu.com/belgique/index.php/station/esso-express/haine-saint-paul/7100/1429 | grep '<h2 class=\"title\">Super 95 (E10)</h2>' -A6 | grep price | cut -d'>' -f2 | cut -d' ' -f1 | tr ',' '.'"
+    unit_of_measurement: "€/l"
+    scan_interval: 900
+
+
+## Prix Cora La Louvière 
+  - platform: command_line
+    name: sonde_prix_diesel_cora_lalouviere
+    unique_id: sonde_prix_diesel_cora_lalouviere
+    command: "curl https://carbu.com/belgique/index.php/station/cora/la-louviere/7100/125 | grep '<h2 class=\"title\">Diesel (B7)</h2>' -A6 | grep price | cut -d'>' -f2 | cut -d' ' -f1 | tr ',' '.'"
+    unit_of_measurement: "€/l"
+  - platform: command_line
+    name: sonde_prix_euro95_cora_lalouviere
+    unique_id: sonde_prix_euro95_cora_lalouviere
+    command: "curl https://carbu.com/belgique/index.php/station/cora/la-louviere/7100/125 | grep '<h2 class=\"title\">Super 95 (E10)</h2>' -A6 | grep price | cut -d'>' -f2 | cut -d' ' -f1 | tr ',' '.'"
+    unit_of_measurement: "€/l"
+
+
+
+## Prix shell hamoir
+  - platform: command_line
+    name: sonde_prix_diesel_shell_hamoir
+    unique_id: sonde_prix_diesel_shell_hamoir
+    command: "curl https://carbu.com/belgique/index.php/station/shell-express/la-louviere/7100/2113 | grep '<h2 class=\"title\">Diesel (B7)</h2>' -A6 | grep price | cut -d'>' -f2 | cut -d' ' -f1 | tr ',' '.'"
+    unit_of_measurement: "€/l"
+    scan_interval: 900
+  - platform: command_line
+    name: sonde_prix_euro95_shell_hamoir
+    unique_id: sonde_prix_euro95_shell_hamoir
+    command: "curl https://carbu.com/belgique/index.php/station/shell-express/la-louviere/7100/2113 | grep '<h2 class=\"title\">Super 95 (E10)</h2>' -A6 | grep price | cut -d'>' -f2 | cut -d' ' -f1 | tr ',' '.'"
+    unit_of_measurement: "€/l"
+    scan_interval: 900
+    
+## Prix shell carrefour
+  - platform: command_line
+    name: sonde_prix_diesel_shell_carrefour
+    unique_id: sonde_prix_diesel_shell_carrefour
+    command: "curl https://carbu.com/belgique/index.php/station/shell-express/haine-saint-pierre/7100/3885 | grep '<h2 class=\"title\">Diesel (B7)</h2>' -A6 | grep price | cut -d'>' -f2 | cut -d' ' -f1 | tr ',' '.'"
+    unit_of_measurement: "€/l"
+    scan_interval: 900
+  - platform: command_line
+    name: sonde_prix_euro95_shell_carrefour
+    unique_id: sonde_prix_euro95_shell_carrefour
+    command: "curl https://carbu.com/belgique/index.php/station/shell-express/haine-saint-pierre/7100/3885 | grep '<h2 class=\"title\">Super 95 (E10)</h2>' -A6 | grep price | cut -d'>' -f2 | cut -d' ' -f1 | tr ',' '.'"
+    unit_of_measurement: "€/l"
+    scan_interval: 900

@@ -1,0 +1,475 @@
+##
+## Binary_sensor
+##
+- binary_sensor:
+
+## Occupation de la maison
+    - name: home_occupied
+      unique_id: home_occupied
+      state: "{{is_state('person.benjamin_puissant', 'home') or is_state('person.christelle', 'home') or is_state('person.alice', 'home') or is_state('person.pauline', 'home') }}"
+      device_class: occupancy
+      
+    - name: Maison Occupée
+      unique_id: maison_occupee
+      icon: mdi:home-assistant
+      state: "{{is_state('input_boolean.ben_maison', 'on') or is_state('input_boolean.chris_maison', 'on') or is_state('input_boolean.alice_maison', 'on') or is_state('input_boolean.pauline_maison', 'on')}}"
+      device_class: occupancy
+
+##
+## Sensors
+##
+- sensor:
+
+## Distance entre Christelle et moi
+
+    - name: Distance entre Ben et Christ
+      unique_id: distance_ben_chris
+      state: "{{ (distance('person.benjamin_puissant', 'person.christelle') * 1000) | int }}"
+      unit_of_measurement: "m"
+      
+## Distance entre Christelle et moi
+
+    - name: Distance entre Ben et Christ km
+      unique_id: distance_ben_chris_km 
+      state: "{{ distance('person.benjamin_puissant', 'person.christelle') | round(3) }}"
+      unit_of_measurement: "km"
+
+## Gas meter template from counter
+    - name: gas_meter
+      unique_id: gas_meter
+      state: "{{ states ('counter.gas_counter') | float * 0.01}}"
+      unit_of_measurement: "m³"
+      icon: "mdi:fire"
+      device_class: gas
+
+## Tension batterie CX
+
+    - name: Tension batterie CX
+      unit_of_measurement: "v"
+      unique_id: batterie_cx
+      state: "{{ ((states('sensor.voltsensor')| float - 0.105) * 5 ) | round(2)}}"
+     
+## consommation rack réseau 
+    - name: consommation_rack_reseau
+      unit_of_measurement: "W"
+      unique_id: consommation_rack_reseau
+      state: "{{ ((states('sensor.prise_armoire_reseau_power') | float) + (states('sensor.prise_ampli_voo_power') | float)) | round(1)}}"
+      
+## consommation commulee bureau
+
+    - name: consommation_bureau 
+      unit_of_measurement: "W"
+      unique_id: consommation_bureau
+      state: "{{ (states('sensor.ordinateur_bureau_power') | float) + (states('sensor.accessoires_bureau_power') | float)}}"
+       
+## consommation cumulée cuisine
+    - name: consommation_cuisine
+      unit_of_measurement: "W"
+      unique_id: consommation_cuisine
+      state: "{{ (states('sensor.lave_vaiselle_power') | float) + (states('sensor.four_micro_ondes_power') | float) + (states('sensor.frigo_cuisine_power') | float) + (states('sensor.prise_station_dyson_power') | float) + (states('sensor.tv_cuisine_power') | float)}}"
+
+## consommation cumulée salon
+    - name: consommation_salon
+      unit_of_measurement: "W"
+      unique_id: consommation_salon
+      state: "{{ (states('sensor.prise_stuv_power') | float) + (states('sensor.prise_internet_power') | float) + (states('sensor.prise_multimedia_power') | float)}}"
+    
+## consommation cumulée rez
+    - name: consommation_rez
+      unit_of_measurement: "W"
+      unique_id: consommation_rez
+      state: "{{ (states('sensor.consommation_cuisine') | float) + (states('sensor.consommation_salon') | float) + (states('sensor.consommation_bureau') | float)}}"
+
+## consommation cumulée etage
+    - name: consommation_etage
+      unit_of_measurement: "W"
+      unique_id: consommation_etage
+      state: "{{ ((states('sensor.bureau_pauline_power') | float) + (states('sensor.ordinateur_christelle_power') | float) + (states('sensor.chauffage_salle_de_bain_energy') | float)) | round(2)}}"
+       
+## consommation cumulée sous-sol
+    - name: consommation_soussol
+      unit_of_measurement: "W"
+      unique_id: consommation_soussol
+      state: "{{ ((states('sensor.buanderie_power') | float) + (states('sensor.lave_linge_power') | float) + (states('sensor.seche_linge_power') | float) + (states('sensor.congelateur_cellier_power') | float) + (states('sensor.frigo_cellier_power') | float) + (states('sensor.lampe_power') | float) + (states('sensor.prise_power') | float) + (states('sensor.chargeur_voiture_power') | float) + (states('sensor.dyson_power') | float) + (states('sensor.entree_garage_power') | float) + (states('sensor.escalier_cave_power') | float) + (states('sensor.lampe_buanderie_power') | float) + (states('sensor.lampe_cellier_power') | float) + (states('sensor.prise_armoire_reseau_power') | float) + (states('sensor.prise_ampli_voo_power') | float) + (states('sensor.prise_tableau_power') | float)) | round(2)}}"
+
+## consommation cumulée maison
+    - name: consommation_home 
+      unit_of_measurement: "kW"
+      unique_id: consommation_home
+      state: "{{ (((states('sensor.consommation_rez') | float) + (states('sensor.consommation_etage') | float) + (states('sensor.consommation_soussol') | float)) / 1000) | round(3)}}"
+      
+##
+## Humidité moyenne
+##
+
+## Humidité cuisine pondérée
+    - name: humidite_cuisine_ponderee
+      icon: "mdi:water-percent"
+      unit_of_measurement: "%"
+      state: "{{ (((states('sensor.sbm_cuisine_humidity') | float) + (states('sensor.sonde_mi_cuisine_humidity') | float) + (states('sensor.sonde_mi_cuisine_bis_humidity') | float)) /3) | round(0)}}"
+      
+## Humidité extérieur pondérée
+    - name: humidity_exterieur_ponderee
+      unit_of_measurement: "%"
+      icon: "mdi:water-percent"
+      state: "{{ (((states('sensor.sonde_exterieure_humidity') | float) + (states('sensor.shellyht_6a438d_humidity') | float)) /2) | int }}"
+
+## Humidité moyenne du rez de chaussée
+    - name: humidite_moyenne_rez
+      icon: "mdi:water-percent"
+      unit_of_measurement: "%"
+      state: "{{ (((states('sensor.sbm_bureau_humidity') | float) + (states('sensor.sbm_salon_humidity') | float) + (states('sensor.sbm_cuisine_humidity') | float) + (states('sensor.sonde_aqara_petit_coin_humidity') | float) + (states('sensor.sonde_piece_de_vie_humidity')| float) + (states('sensor.sonde_hall_d_entree_humidity') | float)) /6) | round(1) }}"
+
+## Humidité moyenne de l'étage
+    - name: humidite_moyenne_etage
+      icon: "mdi:water-percent"
+      unit_of_measurement: "%"
+      state: "{{ (((states('sensor.sbm_chambre_alice_humidity') | float) + (states('sensor.sbm_chambre_elisa_humidity') | float) + (states('sensor.sbm_chambre_parentale_humidity') | float) + (states('sensor.sbm_chambre_pauline_humidity') | float) + (states('sensor.sbm_salle_de_bain_humidity')| float) + (states('sensor.sbm_hall_de_nuit_humidity') | float)) /6) | round(1) }}"
+
+## Humidité moyenne du sous sol
+    - name: humidite_moyenne_sous_sol
+      icon: "mdi:water-percent"
+      unit_of_measurement: "%"
+      state: "{{ (((states('sensor.sbm_garage_humidity') | float) + (states('sensor.sbm_buanderie_humidity') | float) + (states('sensor.cellier_humidity') | float)) /3) | round(1) }}"
+        
+## Température moyenne de la maison
+    - name: humidite_moyenne_maison
+      icon: "mdi:water-percent"
+      unit_of_measurement: "%"
+      state: "{{ (((states('sensor.humidite_moyenne_sous_sol') | float) + (states('sensor.humidite_moyenne_rez') | float) + (states('sensor.humidite_moyenne_etage') | float)) /3) | round(1) }}"
+      
+##
+## Temperature moyenne
+##
+      
+## Température cuisine pondérée
+    - name: temperature_cuisine_ponderee
+      icon: "mdi:thermometer"
+      unit_of_measurement: "°C"
+      state: "{{ (((states('sensor.sbm_cuisine_temperature') | float) + (states('sensor.sonde_mi_cuisine_temperature') | float) + (states('sensor.sonde_mi_cuisine_bis_temperature') | float)) /3) | round(1)}}"
+
+## Température extérieur pondérée
+    - name: temperature_exterieur_ponderee
+      icon: "mdi:thermometer"
+      unit_of_measurement: "°C"
+      state: "{{ (((states('sensor.sonde_exterieure_temperature') | float) + (states('sensor.shellyht_6a438d_temperature') | float)) /2) | round(1)}}"
+        
+## Température moyenne du rez de chaussée
+    - name: temperature_moyenne_rez
+      icon: "mdi:thermometer"
+      unit_of_measurement: "°c"
+      state: "{{ (((states('sensor.sbm_bureau_temperature') | float) + (states('sensor.sbm_salon_temperature') | float) + (states('sensor.sbm_cuisine_temperature') | float) + (states('sensor.sonde_aqara_petit_coin_temperature') | float) + (states('sensor.sonde_piece_de_vie_temperature')| float) + (states('sensor.sonde_hall_d_entree_temperature') | float)) /6) | round(1) }}"
+        
+## Température moyenne de l'étage
+    - name: temperature_moyenne_etage
+      icon: "mdi:thermometer"
+      unit_of_measurement: "°c"
+      state: "{{ (((states('sensor.sbm_chambre_alice_temperature') | float) + (states('sensor.sbm_chambre_elisa_temperature') | float) + (states('sensor.sbm_chambre_parentale_temperature') | float) + (states('sensor.sbm_chambre_pauline_temperature') | float) + (states('sensor.sbm_salle_de_bain_temperature')| float) + (states('sensor.sbm_hall_de_nuit_temperature') | float)) /6) | round(1) }}"
+        
+## Température moyenne du sous sol
+    - name: temperature_moyenne_sous_sol
+      icon: "mdi:thermometer"
+      unit_of_measurement: "°c"
+      state: "{{ (((states('sensor.sbm_garage_temperature') | float) + (states('sensor.sbm_buanderie_temperature') | float) + (states('sensor.cellier_temperature') | float)) /3) | round(1) }}"
+        
+## Température moyenne de la maison
+    - name: temperature_moyenne_maison
+      icon: "mdi:thermometer"
+      unit_of_measurement: "°c"
+      state: "{{ (((states('sensor.temperature_moyenne_sous_sol') | float) + (states('sensor.temperature_moyenne_rez') | float) + (states('sensor.temperature_moyenne_etage') | float)) /3) | round(1) }}"
+
+## Calcul litrage pour faire le plein
+    - name: litrage_plein
+      unit_of_measurement: "l"
+      state: "{{ ((100 - (states('sensor.1_yvz_883_fuel_level')| int))/100 * 66) | round(2)}}"
+      
+      
+## Calcul des couts avec prix officiel 
+    - name: dieselb7_officiel_50l
+      icon: "mdi:gas-station"
+      unit_of_measurement: "€"
+      state: "{{ (states('sensor.prix_dieselb7') | float) * 50 }}"
+    - name: dieselb7_officiel_plein
+      unit_of_measurement: "€"
+      icon: "mdi:gas-station"
+      state: "{{ ((100 - (states('sensor.1_yvz_883_fuel_level')| int))/100 * 66 * (states('sensor.prix_dieselb7') | float) )| round(2)}}"
+    - name: diff_dieselb7_officiel_plein
+      unit_of_measurement: "€"
+      icon: "mdi:gas-station"
+      state: "{{ ((states('sensor.dieselb7_officiel_plein')| float) - (states('sensor.dieselb7_officiel_plein') | float)) | round(2) }}" 
+      
+## Calcul des couts avec prix Cora La Louvière       
+    - name: prix_diesel_cora_lalouviere_50l
+      unit_of_measurement: "€"
+      icon: "mdi:gas-station"
+      state: "{{ (states('sensor.sonde_prix_diesel_cora_lalouviere') | float) * 50 }}"
+    - name: prix_diesel_cora_lalouviere_plein
+      unit_of_measurement: "€"
+      icon: "mdi:gas-station"
+      state: "{{ ((100 - (states('sensor.1_yvz_883_fuel_level')| int))/100 * 66 * (states('sensor.sonde_prix_diesel_cora_lalouviere') | float) )| round(2)}}"
+    - name: diff_diesel_cora_lalouviere_plein
+      unit_of_measurement: "€"
+      icon: "mdi:gas-station"
+      state: "{{ ((states('sensor.dieselb7_officiel_plein')| float) - (states('sensor.prix_diesel_cora_lalouviere_plein') | float)) | round(2) }}"      
+      
+## Calcul des couts avec prix Esso Devergnies
+    - name: prix_diesel_esso_express_hsp_50l
+      icon: "mdi:gas-station"
+      unit_of_measurement: "€"
+      state: "{{ (states('sensor.sonde_prix_diesel_esso_express_hsp') | float) * 50 }}"
+    - name: prix_diesel_esso_express_hsp_plein
+      unit_of_measurement: "€"
+      icon: "mdi:gas-station"
+      state: "{{ ((100 - (states('sensor.1_yvz_883_fuel_level')| int))/100 * 66 * (states('sensor.sonde_prix_diesel_esso_express_hsp') | float) )| round(2)}}"
+    - name: diff_diesel_esso_express_hsp_plein
+      unit_of_measurement: "€"
+      icon: "mdi:gas-station"
+      state: "{{ ((states('sensor.dieselb7_officiel_plein')| float) - (states('sensor.prix_diesel_esso_express_hsp_plein') | float)) | round(2) }}"
+
+## Calcul des couts avec prix Lukoil Déportation
+    - name: prix_diesel_lukoil_deportation_50l
+      icon: "mdi:gas-station"
+      unit_of_measurement: "€"
+      state: "{{ (states('sensor.sonde_prix_diesel_lukoil_deportation') | float) * 50 }}"
+    - name: prix_diesel_lukoil_deportation_plein
+      unit_of_measurement: "€"
+      icon: "mdi:gas-station"
+      state: "{{ ((100 - (states('sensor.1_yvz_883_fuel_level')| int))/100 * 66 * (states('sensor.sonde_prix_diesel_lukoil_deportation') | float) )| round(2)}}"
+    - name: diff_diesel_lukoil_deportation_plein
+      unit_of_measurement: "€"
+      icon: "mdi:gas-station"
+      state: "{{ ((states('sensor.dieselb7_officiel_plein')| float) - (states('sensor.prix_diesel_lukoil_deportation_plein') | float)) | round(2) }}"
+      
+## Calcul des couts avec prix Shell Carrefour Haine-St-Pierre
+    - name: prix_diesel_shell_carrefour_50l
+      icon: "mdi:gas-station"
+      unit_of_measurement: "€"
+      state: "{{ (states('sensor.sonde_prix_diesel_shell_carrefour') | float) * 50 }}"
+    - name: prix_diesel_shell_carrefour_plein
+      unit_of_measurement: "€"
+      icon: "mdi:gas-station"
+      state: "{{ ((100 - (states('sensor.1_yvz_883_fuel_level')| int))/100 * 66 * (states('sensor.sonde_prix_diesel_shell_carrefour') | float) )| round(2)}}"
+    - name: diff_diesel_shell_carrefour_plein
+      unit_of_measurement: "€"
+      icon: "mdi:gas-station"
+      state: "{{ ((states('sensor.dieselb7_officiel_plein')| float) - (states('sensor.prix_diesel_shell_carrefour_plein') | float)) | round(2) }}"      
+
+## Calcul des couts avec prix Shell rue Hamoir
+    - name: prix_diesel_shell_hamoir_50l
+      icon: "mdi:gas-station"
+      unit_of_measurement: "€"
+      state: "{{ (states('sensor.sonde_prix_diesel_shell_hamoir') | float) * 50 }}"
+    - name: prix_diesel_shell_hamoir_plein
+      unit_of_measurement: "€"
+      icon: "mdi:gas-station"
+      state: "{{ ((100 - (states('sensor.1_yvz_883_fuel_level')| int))/100 * 66 * (states('sensor.sonde_prix_diesel_shell_hamoir') | float) )| round(2)}}"
+    - name: diff_diesel_shell_hamoir_plein
+      unit_of_measurement: "€"
+      icon: "mdi:gas-station"
+      state: "{{ ((states('sensor.dieselb7_officiel_plein')| float) - (states('sensor.prix_diesel_shell_hamoir_plein') | float)) | round(2) }}"
+      
+## Calcul des couts avec prix Auchan Louvroil
+    - name: prix_gazole_auchan_louvroil_50l
+      icon: "mdi:gas-station"
+      unit_of_measurement: "€"
+      state: "{{ (states('sensor.prix_gazole_auchan_louvroil') | float) * 50 }}"
+    - name: prix_gazole_auchan_louvroil_plein
+      unit_of_measurement: "€"
+      icon: "mdi:gas-station"
+      state: "{{ ((100 - (states('sensor.1_yvz_883_fuel_level')| int))/100 * 66 * (states('sensor.prix_gazole_auchan_louvroil') | float) )| round(2)}}"
+    - name: diff_gazole_auchan_louvroil_plein
+      unit_of_measurement: "€"
+      icon: "mdi:gas-station"
+      state: "{{ ((states('sensor.dieselb7_officiel_plein')| float) - (states('sensor.prix_gazole_auchan_louvroil_plein') | float)) | round(2) }}"
+      
+## Calcul des couts avec prix InterMarché Hautmont
+    - name: prix_gazole_intermarche_hautmont_50l
+      icon: "mdi:gas-station"
+      unit_of_measurement: "€"
+      state: "{{ (states('sensor.prix_gazole_intermarche_hautmont') | float) * 50 }}"
+    - name: prix_gazole_intermarche_hautmont_plein
+      unit_of_measurement: "€"
+      icon: "mdi:gas-station"
+      state: "{{ ((100 - (states('sensor.1_yvz_883_fuel_level')| int))/100 * 66 * (states('sensor.prix_gazole_intermarche_hautmont') | float) )| round(2)}}"
+    - name: diff_gazole_intermarche_hautmont_plein
+      unit_of_measurement: "€"
+      icon: "mdi:gas-station"
+      state: "{{ ((states('sensor.dieselb7_officiel_plein')| float) - (states('sensor.prix_gazole_intermarche_hautmont_plein') | float)) | round(2) }}"
+
+## Calcul des couts avec prix InterMarché Terre Rouge Cahors
+    - name: prix_gazole_intermarche_terre_rouge_50l
+      icon: "mdi:gas-station"
+      unit_of_measurement: "€"
+      state: "{{ (states('sensor.prix_gazole_intermarche_terre_rouge') | float) * 50 }}"
+    - name: prix_gazole_intermarche_terre_rouge_plein
+      unit_of_measurement: "€"
+      icon: "mdi:gas-station"
+      state: "{{ ((100 - (states('sensor.1_yvz_883_fuel_level')| int))/100 * 66 * (states('sensor.prix_gazole_intermarche_terre_rouge') | float) )| round(2)}}"
+    - name: diff_gazole_intermarche_terre_rouge_plein
+      unit_of_measurement: "€"
+      icon: "mdi:gas-station"
+      state: "{{ ((states('sensor.dieselb7_officiel_plein')| float) - (states('sensor.prix_gazole_intermarche_terre_rouge_plein') | float)) | round(2) }}"
+
+## Calcul des couts avec prix Leclerc Cahors
+    - name: prix_gazole_leclerc_cahors_50l
+      icon: "mdi:gas-station"
+      unit_of_measurement: "€"
+      state: "{{ (states('sensor.prix_gazole_leclerc_cahors') | float) * 50 }}"
+    - name: prix_gazole_leclerc_cahors_plein
+      unit_of_measurement: "€"
+      icon: "mdi:gas-station"
+      state: "{{ ((100 - (states('sensor.1_yvz_883_fuel_level')| int))/100 * 66 * (states('sensor.prix_gazole_leclerc_cahors') | float) )| round(2)}}"
+    - name: diff_gazole_leclerc_cahors_plein
+      unit_of_measurement: "€"
+      icon: "mdi:gas-station"
+      state: "{{ ((states('sensor.dieselb7_officiel_plein')| float) - (states('sensor.prix_gazole_leclerc_cahors_plein') | float)) | round(2) }}"
+
+## Calcul des couts avec prix Leclerc Bernay
+    - name: prix_gazole_leclerc_bernay_50l
+      icon: "mdi:gas-station"
+      unit_of_measurement: "€"
+      state: "{{ (states('sensor.prix_gazole_leclerc_bernay') | float) * 50 }}"
+    - name: prix_gazole_leclerc_bernay_plein
+      unit_of_measurement: "€"
+      icon: "mdi:gas-station"
+      state: "{{ ((100 - (states('sensor.1_yvz_883_fuel_level')| int))/100 * 66 * (states('sensor.prix_gazole_leclerc_bernay') | float) )| round(2)}}"
+    - name: diff_gazole_leclerc_bernay_plein
+      unit_of_measurement: "€"
+      icon: "mdi:gas-station"
+      state: "{{ ((states('sensor.dieselb7_officiel_plein')| float) - (states('sensor.prix_gazole_leclerc_bernay_plein') | float)) | round(2) }}" 
+      
+## Template pour BB-8
+    - name: BB-8 Guests
+      state: "{{ states.sensor.bb_8.attributes.Guests }}"
+      unique_id: BB-8 Guests
+
+    - name: BB-8 Activity
+      state: >
+              {{ states.sensor.bb_8.attributes.Activity }}
+      unit_of_measurement: 'Mbps'
+      unique_id: BB-8 Activity
+      
+    - name: BB-8 RAM
+      state: >
+              {{ states.sensor.bb_8.attributes.RAM }}
+      unit_of_measurement: '%'
+      unique_id: BB-8 RAM
+      
+    - name: BB-8 CPU
+      state: >
+              {{ states.sensor.bb_8.attributes.CPU }}
+      unit_of_measurement: '%'
+      unique_id: BB-8 CPU
+      
+    - name: BB-8 Score
+      state: >
+              {{ states.sensor.bb_8.attributes.Score }}
+      unique_id: BB-8 Score
+              
+    - name:  BB-8 2.4Ghz Score
+      state: >
+              {% if is_state_attr('sensor.bb_8', 'Score_wifi0' , -1) %}
+                N/A
+              {% else %}
+                {{ states.sensor.bb_8.attributes.Score_wifi0 }}.
+              {% endif %}
+      unique_id: BB-8 2.4Ghz Score
+        
+    - name: BB-8 5Ghz Score
+      state: >
+              {% if is_state_attr('sensor.bb_8_', 'Score_wifi1' , -1) %}
+                N/A
+              {% else %}
+                {{ states.sensor.bb_8.attributes.Score_wifi1 }}.
+              {% endif %}
+      unique_id: BB-8 5Ghz Score
+              
+    - name:  BB-8 2.4Ghz Wifi devices
+      state: >
+              {{ states.sensor.bb_8.attributes.Clients_wifi0 }}
+      unique_id: BB-8 2.4Ghz Wifi devices
+              
+    - name: BB-8 5Ghz Wifi devices
+      state: >
+              {{ states.sensor.bb_8.attributes.Clients_wifi1 }}
+      unique_id: BB-8 5Ghz Wifi devices
+              
+    - name: BB-8 update
+      state: >
+              {% if is_state_attr('sensor.bb_8', 'Update' , false) %}
+                No
+              {% else %}
+                Available
+              {% endif %}
+      unique_id: BB-8 update
+      
+## Template pour R2-D2
+    - name: R2-D2 Guests
+      state: "{{ states.sensor.r2_d2.attributes.Guests }}"
+      unique_id: R2-D2 Guests
+
+    - name: R2-D2 Activity
+      state: >
+              {{ states.sensor.r2_d2.attributes.Activity }}
+      unit_of_measurement: 'Mbps'
+      unique_id: R2-D2 Activity
+      
+    - name: R2-D2 RAM
+      state: >
+              {{ states.sensor.r2_d2.attributes.RAM }}
+      unit_of_measurement: '%'
+      unique_id: R2-D2 RAM
+      
+    - name: R2-D2 CPU
+      state: >
+              {{ states.sensor.r2_d2.attributes.CPU }}
+      unit_of_measurement: '%'
+      unique_id: R2-D2 CPU
+      
+    - name: R2-D2 Score
+      state: >
+              {{ states.sensor.r2_d2.attributes.Score }}
+      unique_id: R2-D2 Score
+              
+    - name:  R2-D2 2.4Ghz Score
+      state: >
+              {% if is_state_attr('sensor.r2_d2', 'Score_wifi0' , -1) %}
+                N/A
+              {% else %}
+                {{ states.sensor.r2_d2.attributes.Score_wifi0 }}.
+              {% endif %}
+      unique_id: R2-D2 2.4Ghz Score
+        
+    - name: R2-D2 5Ghz Score
+      state: >
+              {% if is_state_attr('sensor.r2_d2_', 'Score_wifi1' , -1) %}
+                N/A
+              {% else %}
+                {{ states.sensor.r2_d2.attributes.Score_wifi1 }}.
+              {% endif %}
+      unique_id: R2-D2 5Ghz Score
+              
+    - name:  R2-D2 2.4Ghz Wifi devices
+      state: >
+              {{ states.sensor.r2_d2.attributes.Clients_wifi0 }}
+      unique_id: R2-D2 2.4Ghz Wifi devices
+              
+    - name: R2-D2 5Ghz Wifi devices
+      state: >
+              {{ states.sensor.r2_d2.attributes.Clients_wifi1 }}
+      unique_id: R2-D2 5Ghz Wifi devices
+              
+    - name: R2-D2 update
+      state: >
+              {% if is_state_attr('sensor.r2_d2', 'Update' , false) %}
+                No
+              {% else %}
+                Available
+              {% endif %}
+      unique_id: R2-D2 update
+      
+## Place parking
+    - name: Place garage avant
+      unique_id: place_garage_avant
+      state: "{{ (states('sensor.ultrasonic_sensor') | float < 1.00) | iif('Occupé', 'Libre') }}"
+
