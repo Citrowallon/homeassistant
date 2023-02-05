@@ -132,7 +132,7 @@
       unit_of_measurement: "%"
       state: "{{ (((states('sensor.sbm_garage_humidity') | float) + (states('sensor.sbm_buanderie_humidity') | float) + (states('sensor.cellier_humidity') | float)) /3) | round(1) }}"
         
-## Température moyenne de la maison
+## Humidité moyenne de la maison
     - name: humidite_moyenne_maison
       icon: "mdi:water-percent"
       unit_of_measurement: "%"
