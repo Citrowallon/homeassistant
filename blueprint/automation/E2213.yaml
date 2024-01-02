@@ -8,7 +8,7 @@ blueprint:
   input:
     button:
       name: Remote
-      description: IKEA SOMRIG Shortcut Button to use (e.g sensor.kitchen_remote_action)
+      description: IKEA SOMRIG Shortcut Button to use (e.g sensor.livingroom_remote_action)
       selector:
         entity:
           integration: mqtt
