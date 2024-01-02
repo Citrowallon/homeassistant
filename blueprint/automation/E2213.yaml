@@ -12,6 +12,7 @@ blueprint:
       selector:
         entity:
           integration: mqtt
+          manufacturer: IKEA of Sweden
           domain:
           - sensor
           multiple: false
