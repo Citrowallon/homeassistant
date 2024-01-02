@@ -1,0 +1,113 @@
+blueprint:
+  name: Z2M IKEA SOMRIG Shortcut Button E2213
+  description: Blueprint for Ikea SOMRIG Shortcut Button E2213. You can put several
+    actions to each single press, double press and long press on both button side.
+  domain: automation
+  input:
+    button:
+      name: Remote
+      description: IKEA SOMRIG Shortcut Button to use (e.g sensor.kitchen_remote_action)
+      selector:
+        entity:
+          integration: mqtt
+          domain:
+          - sensor
+          multiple: false
+    button_1_single:
+      name: Action when 1_short_release sended
+      description: Action to run when SHORT press on button 1
+      default: []
+      selector:
+        action: {}
+    button_1_double:
+      name: Action when 1_double_press sended
+      description: Action to run when DOUBLE SHORT press on button 1
+      default: []
+      selector:
+        action: {}
+    button_1_long:
+      name: Action when 1_long_press sended
+      description: Action to run when LONG press on button 1
+      default: []
+      selector:
+        action: {}
+    button_2_single:
+      name: Action when 2_short_release sended
+      description: Action to run when SHORT press on button 2
+      default: []
+      selector:
+        action: {}
+    button_2_double:
+      name: Action when 2_double_press sended
+      description: Action to run when DOUBLE SHORT press on button 2
+      default: []
+      selector:
+        action: {}
+    button_2_long:
+      name: Action when 2_long_press sended
+      description: Action to run when LONG press on button 2
+      default: []
+      selector:
+        action: {}
+mode: restart
+max_exceeded: silent
+trigger:
+- platform: state
+  entity_id:
+  - !input button
+  to: 1_short_release
+  id: 1_short_release
+- platform: state
+  entity_id:
+  - !input button
+  to: 1_double_press
+  id: 1_double_press
+- platform: state
+  entity_id:
+  - !input button
+  to: 1_long_press
+  id: 1_long_press
+- platform: state
+  entity_id:
+  - !input button
+  to: 2_short_release
+  id: 2_short_release
+- platform: state
+  entity_id:
+  - !input button
+  to: 2_double_press
+  id: 2_double_press
+- platform: state
+  entity_id:
+  - !input button
+  to: 2_long_press
+  id: 2_long_press
+
+condition: []
+action:
+- choose:
+  - conditions:
+    - condition: trigger
+      id: 1_short_release
+    sequence: !input button_1_single
+  - conditions:
+    - condition: trigger
+      id: 1_double_press
+    sequence: !input button_1_double
+  - conditions:
+    - condition: trigger
+      id: 1_long_press
+    sequence: !input button_1_long
+  - conditions:
+    - condition: trigger
+      id: 2_short_release
+    sequence: !input button_2_single
+  - conditions:
+    - condition: trigger
+      id: 2_double_press
+    sequence: !input button_2_double
+  - conditions:
+    - condition: trigger
+      id: 2_long_press
+    sequence: !input button_2_long
+  
