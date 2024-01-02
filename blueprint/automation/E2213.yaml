@@ -3,6 +3,7 @@ blueprint:
   description: Blueprint for Ikea SOMRIG Shortcut Button E2213. You can put several
     actions to each single press, double press and long press on both button side.
   domain: automation
+  source_url: https://github.com/Citrowallon/homeassistant/edit/main/blueprint/automation/E2213.yaml
   input:
     button:
       name: Remote
